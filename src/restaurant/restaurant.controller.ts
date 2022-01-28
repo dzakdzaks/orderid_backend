@@ -8,7 +8,7 @@ export class RestaurantController {
     constructor(private readonly service: RestaurantService) {}
 
     @Get()
-    async index() {
+    async all() {
         return await this.service.findAll();
     }
 

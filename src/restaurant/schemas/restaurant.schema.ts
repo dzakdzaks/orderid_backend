@@ -22,9 +22,6 @@ export class Restaurant {
 
     @Prop()
     updatedAt?: Date;
-
-    @Prop()
-    deletedAt?: Date;
 }
 
 export const RestaurantSchema = SchemaFactory.createForClass(Restaurant);

@@ -7,7 +7,10 @@ import { Restaurant, RestaurantDocument } from './schemas/restaurant.schema';
 
 @Injectable()
 export class RestaurantService {
-    constructor(@InjectModel(Restaurant.name) private readonly model: Model<RestaurantDocument>) {}
+    constructor(
+        @InjectModel(Restaurant.name) 
+        private readonly model: Model<RestaurantDocument>
+    ) {}
 
     async findAll(): Promise<Restaurant[]> {
         return await this.model.find().exec();

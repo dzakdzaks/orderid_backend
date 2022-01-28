@@ -1,16 +1,19 @@
 import { IsNotEmpty, IsNumber, IsString } from "class-validator"
 
-export class BaseRestaurantDto {
+export class BaseMenuDto {
+    @IsString()
+    @IsNotEmpty()
+    restaurant: String
+
     @IsString()
     @IsNotEmpty()
     name: String
-
-    @IsString()
-    address?: String
     
     @IsNumber()
-    latitude?: number
+    @IsNotEmpty()
+    price: number
 
     @IsNumber()
-    longitude?: number
+    @IsNotEmpty()
+    qty: number
 }
