@@ -7,23 +7,39 @@ import { MenuModule } from './menu/menu.module';
 import { MenuCategoryModule } from './menu-category/menu-category.module';
 import { PreAuthMiddleware } from './auth/preauth.middlewate';
 import { FirebaseApp } from './auth/firebase-app';
+import { ApiController } from './api.controller';
+import { RestaurantService } from './restaurant/restaurant.service';
+import { Restaurant, RestaurantSchema } from './restaurant/schemas/restaurant.schema';
+import { MenuCategory, MenuCategorySchema } from './menu-category/schemas/menu-category.schema';
+import { Menu, MenuSchema } from './menu/schemas/menu.schema';
+import { MenuCategoryService } from './menu-category/menu-category.service';
+import { MenuService } from './menu/menu.service';
 
 @Module({
-  imports: [MongooseModule.forRoot('mongodb+srv://dzakdzaks:dzakdzaks@firstcluster.wlsr7.mongodb.net/orderid_db?retryWrites=true&w=majority'), RestaurantModule, MenuModule, MenuCategoryModule],
-  controllers: [AppController],
-  providers: [AppService, FirebaseApp],
+  imports: [
+    MongooseModule.forRoot('mongodb+srv://dzakdzaks:dzakdzaks@firstcluster.wlsr7.mongodb.net/orderid_db?retryWrites=true&w=majority'),
+    RestaurantModule,
+    MenuModule,
+    MenuCategoryModule,
+    MongooseModule.forFeature([
+      { name: Restaurant.name, schema: RestaurantSchema },
+      { name: MenuCategory.name, schema: MenuCategorySchema },
+      { name: Menu.name, schema: MenuSchema },
+    ])],
+  controllers: [AppController, ApiController],
+  providers: [AppService, FirebaseApp, RestaurantService, MenuCategoryService, MenuService],
 })
 
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): any {
     consumer
-    .apply(PreAuthMiddleware)
-    // .exclude(
-    //   'restaurant/(.*)'
-    // )
-    .forRoutes({
-      path: '*',
-      method: RequestMethod.ALL
-    })
+      .apply(PreAuthMiddleware)
+      // .exclude(
+      //   'restaurant/(.*)'
+      // )
+      .forRoutes({
+        path: '*',
+        method: RequestMethod.ALL
+      })
   }
 }

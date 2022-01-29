@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import * as mongoose from 'mongoose';
+import { Menu } from "src/menu/schemas/menu.schema";
 import { Restaurant } from "src/restaurant/schemas/restaurant.schema";
 
 export type MenuCategoryDocument = MenuCategory & Document
@@ -13,6 +14,9 @@ export class MenuCategory {
 
     @Prop({ required: true})
     name: string;
+
+    @Prop()
+    menus?: Menu[]
 }
 
 export const MenuCategorySchema = SchemaFactory.createForClass(MenuCategory)
