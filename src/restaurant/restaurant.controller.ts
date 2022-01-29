@@ -1,8 +1,9 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, UseInterceptors } from '@nestjs/common';
 import { TransformInterceptor } from 'src/utility/transform.interceptor';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import { RestaurantService } from './restaurant.service';
+import * as mongoose from 'mongoose';
 
 @Controller('restaurant')
 export class RestaurantController {
@@ -20,12 +21,15 @@ export class RestaurantController {
 
     @Get(':id')
     async find(@Param('id') id: String) {
-        const restaurant = await this.service.findOne(id);
-        if (restaurant) {
-            return { restaurant }
-        } else {
-             throw new NotFoundException();
+        if (!mongoose.isValidObjectId(id)) {
+            throw new BadRequestException()
         }
+        const restaurant = await this.service.findOne(id);
+        if (!restaurant) {
+            throw new NotFoundException();
+            
+        }
+        return { restaurant }
     }
 
     @Post('create')
@@ -36,12 +40,18 @@ export class RestaurantController {
 
     @Put('update/:id')
     async update(@Param('id') id: String, @Body() updateRestaurantDto: UpdateRestaurantDto) {
+        if (!mongoose.isValidObjectId(id)) {
+            throw new BadRequestException()
+        }
         const restaurant = await this.service.update(id, updateRestaurantDto);
         return { restaurant }
     }
 
     @Delete('delete/:id')
     async delete(@Param('id') id: String) {
+        if (!mongoose.isValidObjectId(id)) {
+            throw new BadRequestException()
+        }
         const restaurant = await this.service.delete(id);
         return { restaurant }
     }
