@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Query } from '@nestjs/common';
 import { CreateMenuCategoryDto } from './dto/create-menu-category.dto';
 import { UpdateMenuCategoryDto } from './dto/update-menu-category.dto';
 import { MenuCategoryService } from './menu-category.service';
@@ -13,7 +13,11 @@ export class MenuCategoryController {
     async all(
         @Query('isPopulated') isPopulated: number
     ) {
-        return await this.service.findAll(isPopulated);
+        const menuCategory = await this.service.findAll(isPopulated);
+        if (!menuCategory || menuCategory.length == 0) {
+            throw new NotFoundException();
+        }
+        return { menuCategory }
     }
 
     @Get('get-by-restaurant/:id')
@@ -21,7 +25,11 @@ export class MenuCategoryController {
         @Param('id') restaurantId: String,
         @Query('isPopulated') isPopulated: number
     ) {
-        return await this.service.findByRestaurant(restaurantId, isPopulated);
+        const menuCategories = await this.service.findByRestaurant(restaurantId, isPopulated);
+        if (!menuCategories || menuCategories.length == 0) {
+            throw new NotFoundException();
+        }
+        return { menuCategories }
     }
 
     @Get(':id')
@@ -29,7 +37,14 @@ export class MenuCategoryController {
         @Param('id') id: String,
         @Query('isPopulated') isPopulated: number
     ) {
-        return await this.service.findOne(id, isPopulated);
+        if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+            throw new BadRequestException()
+        }
+        const menuCategory = await this.service.findOne(id, isPopulated);
+        if (!menuCategory) {
+            throw new NotFoundException();
+        }
+        return { menuCategory }
     }
 
     @Post('create')

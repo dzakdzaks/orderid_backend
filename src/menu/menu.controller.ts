@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Query } from '@nestjs/common';
 import { CreateMenuDto } from './dto/create-menu.dto';
 import { UpdateMenuDto } from './dto/update-menu.dto';
 import { MenuService } from './menu.service';
@@ -13,7 +13,11 @@ export class MenuController {
     async all(
         @Query('isPopulated') isPopulated: number
     ) {
-        return await this.service.findAll(isPopulated);
+        const menus = await this.service.findAll(isPopulated);
+        if (!menus || menus.length == 0) {
+            throw new NotFoundException()
+        }
+        return menus
     }
 
     @Get('get-by-menu-category/:id')
@@ -21,7 +25,11 @@ export class MenuController {
         @Param('id') id: String,
         @Query('isPopulated') isPopulated: number
     ) {
-        return await this.service.findByMenuCategory(id, isPopulated);
+        const menus = await this.service.findByMenuCategory(id, isPopulated);
+        if (!menus || menus.length == 0) {
+            throw new NotFoundException()
+        }
+        return menus
     }
 
     @Get(':id')
@@ -29,7 +37,11 @@ export class MenuController {
         @Param('id') id: String,
         @Query('isPopulated') isPopulated: number
     ) {
-        return await this.service.findOne(id, isPopulated);
+        const menu = await this.service.findOne(id, isPopulated);
+        if (!menu) {
+            throw new NotFoundException()
+        }
+        return menu
     }
 
     @Post('create')
