@@ -21,8 +21,7 @@ export class FirebaseApp {
 
     constructor() {
         this.firebaseApp = firebase.initializeApp({
-            credential: firebase.credential.cert(firebaseParams),
-            databaseURL: 'https://orderid-904b9-default-rtdb.asia-southeast1.firebasedatabase.app'
+            credential: firebase.credential.cert(firebaseParams)
         });
     }
 
