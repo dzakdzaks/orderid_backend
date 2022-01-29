@@ -19,9 +19,8 @@ export class PreAuthMiddleware implements NestMiddleware {
                 .verifyIdToken(token.replace('Bearer ', ''))
                 .then(async (decodedToken) => {
                     req['user'] = {
-                        email: decodedToken.email,
-                        roles: (decodedToken.roles || []),
-                        type: decodedToken.type
+                        uid: decodedToken.uid,
+                        email: decodedToken.email
                     }
                     next()
                 })
