@@ -3,10 +3,18 @@ import { IsNotEmpty, IsNumber, IsString } from "class-validator"
 export class BaseRestaurantDto {
     @IsString()
     @IsNotEmpty()
-    name: String
+    name: string
 
     @IsString()
-    address?: String
+    @IsNotEmpty()
+    code: string
+
+    @IsString()
+    @IsNotEmpty()
+    address?: string
+
+    @IsString()
+    color?: string
     
     @IsNumber()
     latitude?: number

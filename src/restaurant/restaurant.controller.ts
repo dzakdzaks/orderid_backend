@@ -3,11 +3,11 @@ import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import { RestaurantService } from './restaurant.service';
 
-@Controller('restaurants')
+@Controller('restaurant')
 export class RestaurantController {
     constructor(private readonly service: RestaurantService) {}
 
-    @Get()
+    @Get('all')
     async all() {
         return await this.service.findAll();
     }
@@ -17,17 +17,17 @@ export class RestaurantController {
         return await this.service.findOne(id);
     }
 
-    @Post()
+    @Post('create')
     async create(@Body() createRestaurantDto: CreateRestaurantDto) {
         return await this.service.create(createRestaurantDto);
     }
 
-    @Put(':id')
+    @Put('update/:id')
     async update(@Param('id') id: String, @Body() updateRestaurantDto: UpdateRestaurantDto) {
         return await this.service.update(id, updateRestaurantDto);
     }
 
-    @Delete(':id')
+    @Delete('delete/:id')
     async delete(@Param('id') id: String) {
         return await this.service.delete(id);
     }

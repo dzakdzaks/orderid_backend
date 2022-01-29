@@ -1,13 +1,13 @@
-import { IsNotEmpty, IsNumber, IsString } from "class-validator"
+import { IsBoolean, IsNotEmpty, IsNumber, IsString } from "class-validator"
 
 export class BaseMenuDto {
     @IsString()
     @IsNotEmpty()
-    restaurant: String
+    menuCategory: string
 
     @IsString()
     @IsNotEmpty()
-    name: String
+    name: string
     
     @IsNumber()
     @IsNotEmpty()
@@ -16,4 +16,7 @@ export class BaseMenuDto {
     @IsNumber()
     @IsNotEmpty()
     qty: number
+
+    @IsBoolean()
+    isRecommended: boolean
 }

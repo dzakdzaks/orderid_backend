@@ -17,17 +17,32 @@ export class MenuService {
     }
 
     async findPopulate(): Promise<Menu[]> {
-        return await this.model.find().populate({ path: "restaurant", select: '' }).exec();
+        return await this.model.find().populate(
+            { path: 'menuCategory', 
+            populate: {
+                path: 'restaurant'
+            },
+            select: '' }
+        ).exec();
     }
 
     async findOne(id: String): Promise<Menu> {
         return await this.model.findById(id).exec();
     }
 
+    async findOnePopulate(id: String): Promise<Menu> {
+        return await this.model.findById(id).populate(
+            { path: 'menuCategory', 
+            populate: {
+                path: 'restaurant'
+            },
+            select: '' }
+        ).exec();
+    }
+
     async create(createMenuDto: CreateMenuDto): Promise<Menu> {
         return await new this.model({
-            ...createMenuDto,
-            createdAt: new Date(),
+            ...createMenuDto
         }).save();
     }
 

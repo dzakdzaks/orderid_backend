@@ -1,12 +1,13 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
-import { CreateMenuDto } from './dto/create-menu.dto';
-import { UpdateMenuDto } from './dto/update-menu.dto';
-import { MenuService } from './menu.service';
+import { BaseMenuCategoryDto } from './dto/base-menu-category.dto';
+import { CreateMenuCategoryDto } from './dto/create-menu-category.dto';
+import { UpdateMenuCategoryDto } from './dto/update-menu-category.dto';
+import { MenuCategoryService } from './menu-category.service';
 
-@Controller('menu')
-export class MenuController {
+@Controller('menu-category')
+export class MenuCategoryController {
     constructor(
-        private readonly service: MenuService
+        private readonly service: MenuCategoryService
     ) {}
 
     @Get('all')
@@ -30,12 +31,12 @@ export class MenuController {
     }
 
     @Post('create')
-    async create(@Body() createMenuDto: CreateMenuDto) {
+    async create(@Body() createMenuDto: CreateMenuCategoryDto) {
         return await this.service.create(createMenuDto);
     }
 
     @Put('update/:id')
-    async update(@Param('id') id: String, @Body() updateMenuDto: UpdateMenuDto) {
+    async update(@Param('id') id: String, @Body() updateMenuDto: UpdateMenuCategoryDto) {
         return await this.service.update(id, updateMenuDto);
     }
 

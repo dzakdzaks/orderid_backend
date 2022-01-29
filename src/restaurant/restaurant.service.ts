@@ -22,8 +22,7 @@ export class RestaurantService {
 
     async create(createRestaurantDto: CreateRestaurantDto): Promise<Restaurant> {
         return await new this.model({
-            ...createRestaurantDto,
-            createdAt: new Date(),
+            ...createRestaurantDto
         }).save();
     }
 

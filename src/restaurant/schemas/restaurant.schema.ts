@@ -3,25 +3,25 @@ import { Document } from "mongoose";
 
 export type RestaurantDocument = Restaurant & Document;
 
-@Schema()
+@Schema({ timestamps: true })
 export class Restaurant {
     @Prop({ required: true })
-    name: String;
+    name: string;
+
+    @Prop({ required: true })
+    code: string;
+
+    @Prop({ required: true })
+    address?: string;
 
     @Prop()
-    address?: String;
+    color?: string;
 
     @Prop()
     latitude?: number;
 
     @Prop()
     longitude?: number;
-
-    @Prop({ required: true })
-    createdAt: Date;
-
-    @Prop()
-    updatedAt?: Date;
 }
 
 export const RestaurantSchema = SchemaFactory.createForClass(Restaurant);
