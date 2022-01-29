@@ -11,20 +11,25 @@ export class MenuCategoryService {
         private readonly model: Model<MenuCategoryDocument>
     ) {}
 
-    async findAll(): Promise<MenuCategory[]> {
+    async findAll(isPopulated: number): Promise<MenuCategory[]> {
+        if (isPopulated == 1) {
+            return await this.model.find().populate({ path: 'restaurant', select: '' }).exec();
+        }
         return this.model.find().exec()
     }
 
-    async findPopulate(): Promise<MenuCategory[]> {
-        return await this.model.find().populate({ path: 'restaurant', select: '' }).exec();
+    async findByRestaurant(id: String, isPopulated: number): Promise<MenuCategory[]> {
+        if (isPopulated == 1) {
+            return await this.model.find({ 'restaurant': id }).populate({ path: 'restaurant', select: '' }).exec()
+        }
+        return await this.model.find({ 'restaurant': id }).exec()
     }
 
-    async findOne(id: String): Promise<MenuCategory> {
+    async findOne(id: String, isPopulated: number): Promise<MenuCategory> {
+        if (isPopulated == 1) {
+            return await this.model.findById(id).populate({ path: 'restaurant', select: '' }).exec();
+        }
         return await this.model.findById(id).exec();
-    }
-
-    async findOnePopulate(id: String): Promise<MenuCategory> {
-        return await this.model.findById(id).populate({ path: 'restaurant', select: '' }).exec();
     }
 
     async create(createMenuDto: BaseMenuCategoryDto): Promise<MenuCategory> {

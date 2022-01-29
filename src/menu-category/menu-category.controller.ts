@@ -1,5 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
-import { BaseMenuCategoryDto } from './dto/base-menu-category.dto';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { CreateMenuCategoryDto } from './dto/create-menu-category.dto';
 import { UpdateMenuCategoryDto } from './dto/update-menu-category.dto';
 import { MenuCategoryService } from './menu-category.service';
@@ -11,23 +10,26 @@ export class MenuCategoryController {
     ) {}
 
     @Get('all')
-    async all() {
-        return await this.service.findAll();
+    async all(
+        @Query('isPopulated') isPopulated: number
+    ) {
+        return await this.service.findAll(isPopulated);
     }
 
-    @Get('all-populate')
-    async allPopulate() {
-        return await this.service.findPopulate();
+    @Get('get-by-restaurant/:id')
+    async findByRestaurant(
+        @Param('id') restaurantId: String,
+        @Query('isPopulated') isPopulated: number
+    ) {
+        return await this.service.findByRestaurant(restaurantId, isPopulated);
     }
 
     @Get(':id')
-    async find(@Param('id') id: String) {
-        return await this.service.findOne(id);
-    }
-
-    @Get(':id/populate')
-    async findPopulate(@Param('id') id: String) {
-        return await this.service.findOnePopulate(id);
+    async find(
+        @Param('id') id: String,
+        @Query('isPopulated') isPopulated: number
+    ) {
+        return await this.service.findOne(id, isPopulated);
     }
 
     @Post('create')

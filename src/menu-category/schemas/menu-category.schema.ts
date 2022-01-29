@@ -6,8 +6,10 @@ export type MenuCategoryDocument = MenuCategory & Document
 
 @Schema({ timestamps: true })
 export class MenuCategory {
+    _id: mongoose.Types.ObjectId
+
     @Prop({ required: true, type: mongoose.Types.ObjectId, ref: Restaurant.name })
-    restaurant: string;
+    restaurant: mongoose.Types.ObjectId;
 
     @Prop({ required: true})
     name: string;
