@@ -7,6 +7,10 @@ export class BaseMenuDto {
 
     @IsString()
     @IsNotEmpty()
+    restaurant: string
+
+    @IsString()
+    @IsNotEmpty()
     name: string
     
     @IsNumber()

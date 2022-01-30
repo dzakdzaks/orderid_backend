@@ -5,7 +5,7 @@ import { RestaurantService } from './restaurant.service';
 import * as mongoose from 'mongoose';
 import { Request } from 'express';
 
-@Controller('restaurant')
+@Controller('api/restaurant')
 export class RestaurantController {
     constructor(private readonly service: RestaurantService) {}
 
@@ -32,7 +32,7 @@ export class RestaurantController {
     async create(@Body() createRestaurantDto: CreateRestaurantDto) {
         try {
             const restaurant = await this.service.create(createRestaurantDto);
-            return { restaurant }
+            return restaurant
         } catch(error) {
             if (error.message.includes('code')) {
                 throw new BadRequestException('Code already exist, try another code')
@@ -46,8 +46,16 @@ export class RestaurantController {
         if (!mongoose.isValidObjectId(id)) {
             throw new BadRequestException()
         }
-        const restaurant = await this.service.update(id, updateRestaurantDto);
-        return { restaurant }
+        try {
+            const restaurant = await this.service.update(id, updateRestaurantDto);
+            return restaurant
+        } catch(error) {
+            if (error.message.includes('code')) {
+                throw new BadRequestException('Code already exist, try another code')
+            }
+            throw new BadRequestException(error)
+        }
+        
     }
 
     @Delete('delete/:id')

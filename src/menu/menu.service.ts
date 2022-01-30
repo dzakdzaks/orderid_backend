@@ -14,40 +14,56 @@ export class MenuService {
 
     async findAll(isPopulated: number): Promise<Menu[]> {
         if (isPopulated == 1) {
-            return await this.model.find().populate(
-                { path: 'menuCategory', 
-                populate: {
-                    path: 'restaurant'
-                },
-                select: '' }
-            ).exec();
+            return await this.model.find()
+            .populate(
+                { path: 'menuCategory', select: '' }
+            )
+            .populate(
+                { path: 'restaurant', select: '' }
+            )
+            .exec();
         }
         return await this.model.find().exec()
+    }
+
+    async findByRestaurant(id: String, isPopulated: number): Promise<Menu[]> {
+        if (isPopulated == 1) {
+            return await this.model.find({ 'restaurant': id })
+            .populate(
+                { path: 'menuCategory', select: '' }
+            )
+            .populate(
+                { path: 'restaurant', select: '' }
+            )
+            .exec()
+        }
+        return await this.model.find({ 'menuCategory': id }).exec()
     }
 
     async findByMenuCategory(id: String, isPopulated: number): Promise<Menu[]> {
         if (isPopulated == 1) {
             return await this.model.find({ 'menuCategory': id })
             .populate(
-                { path: 'menuCategory',
-                populate: {
-                    path: 'restaurant'
-                },
-                 select: '' }
-            ).exec()
+                { path: 'menuCategory', select: '' }
+            )
+            .populate(
+                { path: 'restaurant', select: '' }
+            )
+            .exec()
         }
         return await this.model.find({ 'menuCategory': id }).exec()
     }
 
     async findOne(id: String, isPopulated: number): Promise<Menu> {
         if (isPopulated == 1) {
-            return await this.model.findById(id).populate(
-                { path: 'menuCategory', 
-                populate: {
-                    path: 'restaurant'
-                },
-                select: '' }
-            ).exec();
+            return await this.model.findById(id)
+            .populate(
+                { path: 'menuCategory', select: '' }
+            )
+            .populate(
+                { path: 'restaurant', select: '' }
+            )
+            .exec();
         }
         return await this.model.findById(id).exec();
     }

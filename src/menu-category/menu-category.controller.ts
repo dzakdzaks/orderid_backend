@@ -4,7 +4,7 @@ import { UpdateMenuCategoryDto } from './dto/update-menu-category.dto';
 import { MenuCategoryService } from './menu-category.service';
 import * as mongoose from 'mongoose';
 
-@Controller('menu-category')
+@Controller('api/menu-category')
 export class MenuCategoryController {
     constructor(
         private readonly service: MenuCategoryService
@@ -18,7 +18,7 @@ export class MenuCategoryController {
         if (!menuCategory || menuCategory.length == 0) {
             throw new NotFoundException();
         }
-        return { menuCategory }
+        return menuCategory
     }
 
     @Get('get-by-restaurant/:id')
@@ -33,7 +33,7 @@ export class MenuCategoryController {
         if (!menuCategories || menuCategories.length == 0) {
             throw new NotFoundException();
         }
-        return { menuCategories }
+        return menuCategories
     }
 
     @Get(':id')
@@ -48,7 +48,7 @@ export class MenuCategoryController {
         if (!menuCategory) {
             throw new NotFoundException();
         }
-        return { menuCategory }
+        return menuCategory
     }
 
     @Post('create')

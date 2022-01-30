@@ -4,7 +4,7 @@ import { UpdateMenuDto } from './dto/update-menu.dto';
 import { MenuService } from './menu.service';
 import * as mongoose from 'mongoose';
 
-@Controller('menu')
+@Controller('api/menu')
 export class MenuController {
     constructor(
         private readonly service: MenuService
@@ -15,6 +15,21 @@ export class MenuController {
         @Query('isPopulated') isPopulated: number
     ) {
         const menus = await this.service.findAll(isPopulated);
+        if (!menus || menus.length == 0) {
+            throw new NotFoundException()
+        }
+        return menus
+    }
+
+    @Get('get-by-restaurant')
+    async findByRestaurant(
+        @Query('restaurantId') restaurantId: String,
+        @Query('isPopulated') isPopulated: number
+    ) {
+        if (!mongoose.isValidObjectId(restaurantId)) {
+            throw new BadRequestException()
+        }
+        const menus = await this.service.findByRestaurant(restaurantId, isPopulated);
         if (!menus || menus.length == 0) {
             throw new NotFoundException()
         }

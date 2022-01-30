@@ -13,11 +13,11 @@ export class ApiController {
     private readonly menuService: MenuService
   ) {}
 
-  @Get('get-restaurant/:id')
+  @Get('get-restaurant/:code')
   async getRestaurant(
-    @Param('id') id: String
+    @Param('code') code: String
   ) {
-    const restaurant = await this.restaurantService.findOne(id)
+    const restaurant = await this.restaurantService.findOne(code)
     const menuCategories = await this.menuCategoryService.findByRestaurant(restaurant._id.toString(), 0)
 
     for(let n = 0; n < menuCategories.length; n++){
