@@ -18,6 +18,9 @@ export class Menu {
     @Prop({ required: true })
     name: string;
 
+    @Prop({ default: '' })
+    description?: string;
+
     @Prop({ required: true })
     price: number;
 

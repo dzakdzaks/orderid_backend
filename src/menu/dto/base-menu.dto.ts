@@ -12,6 +12,9 @@ export class BaseMenuDto {
     @IsString()
     @IsNotEmpty()
     name: string
+
+    @IsString()
+    description?: string
     
     @IsNumber()
     @IsNotEmpty()
