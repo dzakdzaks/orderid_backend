@@ -19,4 +19,7 @@ export class BaseMenuDto {
 
     @IsBoolean()
     isRecommended: boolean
+
+    @IsString()
+    imageUrl?: string
 }

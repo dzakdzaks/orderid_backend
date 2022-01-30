@@ -15,6 +15,12 @@ export class BaseRestaurantDto {
 
     @IsString()
     color?: string
+
+    @IsString()
+    imageUrl?: string
+
+    @IsString()
+    posterUrl?: string
     
     @IsNumber()
     latitude?: number

@@ -20,6 +20,12 @@ export class Restaurant {
     color?: string;
 
     @Prop()
+    imageUrl?: string;
+
+    @Prop()
+    posterUrl?: string;
+
+    @Prop()
     latitude?: number;
 
     @Prop()

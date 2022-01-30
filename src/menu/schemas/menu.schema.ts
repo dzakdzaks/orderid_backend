@@ -22,6 +22,9 @@ export class Menu {
 
     @Prop({ default: false })
     isRecommended: boolean;
+
+    @Prop()
+    imageUrl?: string;
 }
 
 export const MenuSchema = SchemaFactory.createForClass(Menu);
