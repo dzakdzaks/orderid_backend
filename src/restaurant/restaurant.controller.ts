@@ -12,11 +12,10 @@ export class RestaurantController {
     @Get('all')
     async all(@Req() request: Request) {
         const restaurants = await this.service.findAll();
-        if (restaurants && restaurants.length > 0) {
-            return { restaurants }
-        } else {
-             throw new NotFoundException();
+        if (!restaurants && restaurants.length == 0) {
+            throw new NotFoundException();
         }
+        return restaurants
     }
 
     @Get(':id')
@@ -29,7 +28,7 @@ export class RestaurantController {
             throw new NotFoundException();
             
         }
-        return { restaurant }
+        return restaurant
     }
 
     @Post('create')
