@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Req } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Post, Put, Req } from '@nestjs/common';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import { RestaurantService } from './restaurant.service';
@@ -18,12 +18,9 @@ export class RestaurantController {
         return restaurants
     }
 
-    @Get(':id')
-    async find(@Param('id') id: String) {
-        if (!mongoose.isValidObjectId(id)) {
-            throw new BadRequestException()
-        }
-        const restaurant = await this.service.findOne(id);
+    @Get(':code')
+    async find(@Param('code') code: String) {
+        const restaurant = await this.service.findOne(code);
         if (!restaurant) {
             throw new NotFoundException();
             
@@ -33,8 +30,15 @@ export class RestaurantController {
 
     @Post('create')
     async create(@Body() createRestaurantDto: CreateRestaurantDto) {
-        const restaurant = await this.service.create(createRestaurantDto);
-        return { restaurant }
+        try {
+            const restaurant = await this.service.create(createRestaurantDto);
+            return { restaurant }
+        } catch(error) {
+            if (error.message.includes('code')) {
+                throw new BadRequestException('Code already exist, try another code')
+            }
+            throw new BadRequestException(error)
+        }
     }
 
     @Put('update/:id')

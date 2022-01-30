@@ -10,7 +10,17 @@ import { Restaurant, RestaurantSchema } from './schemas/restaurant.schema';
   imports: [
     MongooseModule.forFeature([
       { name: Restaurant.name, schema: RestaurantSchema }  
-    ])
+    ]),
+    MongooseModule.forFeatureAsync([
+      {
+        name: Restaurant.name,
+        useFactory: () => {
+          const schema = RestaurantSchema;
+          schema.plugin(require('mongoose-unique-validator'));
+          return schema;
+        },
+      },
+    ]),
   ]
 })
 export class RestaurantModule {}
