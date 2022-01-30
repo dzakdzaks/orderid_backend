@@ -22,7 +22,7 @@ export class BaseMenuDto {
     qty: number
 
     @IsBoolean()
-    isRecommended: boolean
+    isPinnedMenu?: boolean
 
     @IsString()
     imageUrl?: string

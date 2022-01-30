@@ -30,6 +30,9 @@ export class Restaurant {
 
     @Prop()
     longitude?: number;
+
+    @Prop({ default: '' })
+    pinnedMenuTitle?: string;
 }
 
 export const RestaurantSchema = SchemaFactory.createForClass(Restaurant);

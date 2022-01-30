@@ -21,9 +21,9 @@ export class MenuController {
         return menus
     }
 
-    @Get('get-by-restaurant')
+    @Get('get-by-restaurant/:id')
     async findByRestaurant(
-        @Query('restaurantId') restaurantId: String,
+        @Param('id') restaurantId: String,
         @Query('isPopulated') isPopulated: number
     ) {
         if (!mongoose.isValidObjectId(restaurantId)) {
@@ -68,7 +68,11 @@ export class MenuController {
 
     @Post('create')
     async create(@Body() createMenuDto: CreateMenuDto) {
-        return await this.service.create(createMenuDto);
+        try {
+            return await this.service.create(createMenuDto);
+        } catch (error) {
+            throw new BadRequestException(error)
+        }
     }
 
     @Put('update/:id')

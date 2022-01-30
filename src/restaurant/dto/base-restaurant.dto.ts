@@ -27,4 +27,7 @@ export class BaseRestaurantDto {
 
     @IsNumber()
     longitude?: number
+
+    @IsString()
+    pinnedMenuTitle?: string
 }

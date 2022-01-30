@@ -37,7 +37,21 @@ export class MenuService {
             )
             .exec()
         }
-        return await this.model.find({ 'menuCategory': id }).exec()
+        return await this.model.find({ 'restaurant': id }).exec()
+    }
+
+    async findPinnedMenuByRestaurant(id: String, isPopulated: number): Promise<Menu[]> {
+        if (isPopulated == 1) {
+            return await this.model.find({ 'restaurant': id, 'isPinnedMenu': true })
+            .populate(
+                { path: 'menuCategory', select: '' }
+            )
+            .populate(
+                { path: 'restaurant', select: '' }
+            )
+            .exec()
+        }
+        return await this.model.find({ 'restaurant': id, 'isPinnedMenu': true }).exec()
     }
 
     async findByMenuCategory(id: String, isPopulated: number): Promise<Menu[]> {

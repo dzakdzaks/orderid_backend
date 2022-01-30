@@ -25,7 +25,7 @@ export class Menu {
     qty: number;
 
     @Prop({ default: false })
-    isRecommended: boolean;
+    isPinnedMenu?: boolean;
 
     @Prop()
     imageUrl?: string;
