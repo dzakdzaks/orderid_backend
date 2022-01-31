@@ -3,7 +3,6 @@ import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import { RestaurantService } from './restaurant.service';
 import * as mongoose from 'mongoose';
-import { Request } from 'express';
 import { Restaurant } from './schema/restaurant.schema';
 
 @Controller('api/restaurant')
@@ -11,7 +10,7 @@ export class RestaurantController {
     constructor(private readonly service: RestaurantService) {}
 
     @Get('all')
-    async all(@Req() request: Request) {
+    async all() {
         const restaurants = await this.service.findAll();
         if (!restaurants && restaurants.length == 0) {
             throw new NotFoundException();

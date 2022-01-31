@@ -15,7 +15,6 @@ import { Menu, MenuSchema } from './menu/schema/menu.schema';
 import { MenuModule } from './menu/menu.module';
 import { MenuService } from './menu/menu.service';
 import { UserModule } from './user/user.module';
-import { UserService } from './user/user.service';
 
 @Module({
   imports: [
@@ -31,7 +30,7 @@ import { UserService } from './user/user.service';
     UserModule
   ],
   controllers: [AppController, ApiController],
-  providers: [AppService, FirebaseApp, RestaurantService, MenuCategoryService, MenuService, UserService],
+  providers: [AppService, FirebaseApp, RestaurantService, MenuCategoryService, MenuService],
 })
 
 export class AppModule implements NestModule {

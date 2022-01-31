@@ -20,9 +20,13 @@ export class FirebaseApp {
     private firebaseApp: firebase.app.App;
 
     constructor() {
-        this.firebaseApp = firebase.initializeApp({
-            credential: firebase.credential.cert(firebaseParams)
-        });
+        if (!firebase.apps.length) {
+            this.firebaseApp = firebase.initializeApp({
+                credential: firebase.credential.cert(firebaseParams)
+            });
+        } else {
+            this.firebaseApp = firebase.app();
+        }
     }
 
     getAuth = (): firebase.auth.Auth => {
