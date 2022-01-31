@@ -8,17 +8,21 @@ import * as mongoose from 'mongoose';
 export class MenuCategoryController {
     constructor(
         private readonly service: MenuCategoryService
-    ) {}
+    ) { }
 
     @Get('all')
     async all(
         @Query('isPopulated') isPopulated: number
     ) {
-        const menuCategory = await this.service.findAll(isPopulated);
-        if (!menuCategory || menuCategory.length == 0) {
-            throw new NotFoundException();
+        try {
+            const menuCategory = await this.service.findAll(isPopulated);
+            if (!menuCategory || menuCategory.length == 0) {
+                throw new NotFoundException();
+            }
+            return menuCategory
+        } catch (error) {
+            throw new BadRequestException(error)
         }
-        return menuCategory
     }
 
     @Get('get-by-restaurant/:id')
@@ -26,14 +30,18 @@ export class MenuCategoryController {
         @Param('id') restaurantId: String,
         @Query('isPopulated') isPopulated: number
     ) {
-        if (!mongoose.isValidObjectId(restaurantId)) {
-            throw new BadRequestException()
+        try {
+            if (!mongoose.isValidObjectId(restaurantId)) {
+                throw new BadRequestException()
+            }
+            const menuCategories = await this.service.findByRestaurant(restaurantId, isPopulated);
+            if (!menuCategories || menuCategories.length == 0) {
+                throw new NotFoundException();
+            }
+            return menuCategories
+        } catch (error) {
+            throw new BadRequestException(error)
         }
-        const menuCategories = await this.service.findByRestaurant(restaurantId, isPopulated);
-        if (!menuCategories || menuCategories.length == 0) {
-            throw new NotFoundException();
-        }
-        return menuCategories
     }
 
     @Get(':id')
@@ -41,34 +49,51 @@ export class MenuCategoryController {
         @Param('id') id: String,
         @Query('isPopulated') isPopulated: number
     ) {
-        if (!mongoose.isValidObjectId(id)) {
-            throw new BadRequestException()
+        try {
+            if (!mongoose.isValidObjectId(id)) {
+                throw new BadRequestException()
+            }
+            const menuCategory = await this.service.findOne(id, isPopulated);
+            if (!menuCategory) {
+                throw new NotFoundException();
+            }
+            return menuCategory
+        } catch (error) {
+            throw new BadRequestException(error)
         }
-        const menuCategory = await this.service.findOne(id, isPopulated);
-        if (!menuCategory) {
-            throw new NotFoundException();
-        }
-        return menuCategory
+
     }
 
     @Post('create')
     async create(@Body() createMenuDto: CreateMenuCategoryDto) {
-        return await this.service.create(createMenuDto);
+        try {
+            return await this.service.create(createMenuDto);
+        } catch (error) {
+            throw new BadRequestException(error)
+        }
     }
 
     @Put('update/:id')
     async update(@Param('id') id: String, @Body() updateMenuDto: UpdateMenuCategoryDto) {
-        if (!mongoose.isValidObjectId(id)) {
-            throw new BadRequestException()
+        try {
+            if (!mongoose.isValidObjectId(id)) {
+                throw new BadRequestException()
+            }
+            return await this.service.update(id, updateMenuDto);
+        } catch (error) {
+            throw new BadRequestException(error)
         }
-        return await this.service.update(id, updateMenuDto);
     }
 
     @Delete('delete/:id')
     async delete(@Param('id') id: String) {
-        if (!mongoose.isValidObjectId(id)) {
-            throw new BadRequestException()
+        try {
+            if (!mongoose.isValidObjectId(id)) {
+                throw new BadRequestException()
+            }
+            return await this.service.delete(id);
+        } catch (error) {
+            throw new BadRequestException(error)
         }
-        return await this.service.delete(id);
     }
 }

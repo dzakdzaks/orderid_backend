@@ -7,15 +7,19 @@ import { Restaurant } from './schema/restaurant.schema';
 
 @Controller('api/restaurant')
 export class RestaurantController {
-    constructor(private readonly service: RestaurantService) {}
+    constructor(private readonly service: RestaurantService) { }
 
     @Get('all')
     async all() {
-        const restaurants = await this.service.findAll();
-        if (!restaurants && restaurants.length == 0) {
-            throw new NotFoundException();
+        try {
+            const restaurants = await this.service.findAll();
+            if (!restaurants && restaurants.length == 0) {
+                throw new NotFoundException();
+            }
+            return restaurants
+        } catch (error) {
+            throw new BadRequestException(error)
         }
-        return restaurants
     }
 
     @Get('get-one')
@@ -23,19 +27,23 @@ export class RestaurantController {
         @Query('id') id: String,
         @Query('code') code: String
     ) {
-        let restaurant: Restaurant
-        if (code != null && code != '') {
-            restaurant = await this.service.findOneByCode(code);
-        } else if (id != null && id != '') {
-            restaurant = await this.service.findOneById(id);
-        } else {
-            throw new BadRequestException()
+        try {
+            let restaurant: Restaurant
+            if (code != null && code != '') {
+                restaurant = await this.service.findOneByCode(code);
+            } else if (id != null && id != '' && mongoose.isValidObjectId(id)) {
+                restaurant = await this.service.findOneById(id);
+            } else {
+                throw new BadRequestException()
+            }
+            if (!restaurant) {
+                throw new NotFoundException();
+
+            }
+            return restaurant
+        } catch (error) {
+            throw new BadRequestException(error)
         }
-        if (!restaurant) {
-            throw new NotFoundException();
-            
-        }
-        return restaurant
     }
 
     @Post('create')
@@ -43,7 +51,7 @@ export class RestaurantController {
         try {
             const restaurant = await this.service.create(createRestaurantDto);
             return restaurant
-        } catch(error) {
+        } catch (error) {
             if (error.message.includes('code')) {
                 throw new BadRequestException('Code already exist, try another code')
             }
@@ -53,27 +61,31 @@ export class RestaurantController {
 
     @Put('update/:id')
     async update(@Param('id') id: String, @Body() updateRestaurantDto: UpdateRestaurantDto) {
-        if (!mongoose.isValidObjectId(id)) {
-            throw new BadRequestException()
-        }
         try {
+            if (!mongoose.isValidObjectId(id)) {
+                throw new BadRequestException()
+            }
             const restaurant = await this.service.update(id, updateRestaurantDto);
             return restaurant
-        } catch(error) {
+        } catch (error) {
             if (error.message.includes('code')) {
                 throw new BadRequestException('Code already exist, try another code')
             }
             throw new BadRequestException(error)
         }
-        
+
     }
 
     @Delete('delete/:id')
     async delete(@Param('id') id: String) {
-        if (!mongoose.isValidObjectId(id)) {
-            throw new BadRequestException()
+        try {
+            if (!mongoose.isValidObjectId(id)) {
+                throw new BadRequestException()
+            }
+            const restaurant = await this.service.delete(id);
+            return { restaurant }
+        } catch (error) {
+            throw new BadRequestException(error)
         }
-        const restaurant = await this.service.delete(id);
-        return { restaurant }
     }
 }

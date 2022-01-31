@@ -8,17 +8,21 @@ import * as mongoose from 'mongoose';
 export class MenuController {
     constructor(
         private readonly service: MenuService
-    ) {}
+    ) { }
 
     @Get('all')
     async all(
         @Query('isPopulated') isPopulated: number
     ) {
-        const menus = await this.service.findAll(isPopulated);
-        if (!menus || menus.length == 0) {
-            throw new NotFoundException()
+        try {
+            const menus = await this.service.findAll(isPopulated);
+            if (!menus || menus.length == 0) {
+                throw new NotFoundException()
+            }
+            return menus
+        } catch (error) {
+            throw new BadRequestException(error)
         }
-        return menus
     }
 
     @Get('get-by-restaurant/:id')
@@ -26,14 +30,18 @@ export class MenuController {
         @Param('id') restaurantId: String,
         @Query('isPopulated') isPopulated: number
     ) {
-        if (!mongoose.isValidObjectId(restaurantId)) {
-            throw new BadRequestException()
+        try {
+            if (!mongoose.isValidObjectId(restaurantId)) {
+                throw new BadRequestException()
+            }
+            const menus = await this.service.findByRestaurant(restaurantId, isPopulated);
+            if (!menus || menus.length == 0) {
+                throw new NotFoundException()
+            }
+            return menus
+        } catch (error) {
+            throw new BadRequestException(error)
         }
-        const menus = await this.service.findByRestaurant(restaurantId, isPopulated);
-        if (!menus || menus.length == 0) {
-            throw new NotFoundException()
-        }
-        return menus
     }
 
     @Get('get-by-menu-category/:id')
@@ -41,14 +49,18 @@ export class MenuController {
         @Param('id') menuCategoryId: String,
         @Query('isPopulated') isPopulated: number
     ) {
-        if (!mongoose.isValidObjectId(menuCategoryId)) {
-            throw new BadRequestException()
+        try {
+            if (!mongoose.isValidObjectId(menuCategoryId)) {
+                throw new BadRequestException()
+            }
+            const menus = await this.service.findByMenuCategory(menuCategoryId, isPopulated);
+            if (!menus || menus.length == 0) {
+                throw new NotFoundException()
+            }
+            return menus
+        } catch (error) {
+            throw new BadRequestException(error)
         }
-        const menus = await this.service.findByMenuCategory(menuCategoryId, isPopulated);
-        if (!menus || menus.length == 0) {
-            throw new NotFoundException()
-        }
-        return menus
     }
 
     @Get(':id')
@@ -56,14 +68,18 @@ export class MenuController {
         @Param('id') id: String,
         @Query('isPopulated') isPopulated: number
     ) {
-        if (!mongoose.isValidObjectId(id)) {
-            throw new BadRequestException()
+        try {
+            if (!mongoose.isValidObjectId(id)) {
+                throw new BadRequestException()
+            }
+            const menu = await this.service.findOne(id, isPopulated);
+            if (!menu) {
+                throw new NotFoundException()
+            }
+            return menu
+        } catch (error) {
+            throw new BadRequestException(error)
         }
-        const menu = await this.service.findOne(id, isPopulated);
-        if (!menu) {
-            throw new NotFoundException()
-        }
-        return menu
     }
 
     @Post('create')
@@ -77,17 +93,25 @@ export class MenuController {
 
     @Put('update/:id')
     async update(@Param('id') id: String, @Body() updateMenuDto: UpdateMenuDto) {
-        if (!mongoose.isValidObjectId(id)) {
-            throw new BadRequestException()
+        try {
+            if (!mongoose.isValidObjectId(id)) {
+                throw new BadRequestException()
+            }
+            return await this.service.update(id, updateMenuDto);
+        } catch (error) {
+            throw new BadRequestException(error)
         }
-        return await this.service.update(id, updateMenuDto);
     }
 
     @Delete('delete/:id')
     async delete(@Param('id') id: String) {
-        if (!mongoose.isValidObjectId(id)) {
-            throw new BadRequestException()
+        try {
+            if (!mongoose.isValidObjectId(id)) {
+                throw new BadRequestException()
+            }
+            return await this.service.delete(id);
+        } catch (error) {
+            throw new BadRequestException(error)
         }
-        return await this.service.delete(id);
     }
 }

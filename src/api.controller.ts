@@ -3,6 +3,7 @@ import { MenuCategoryService } from './menu-category/menu-category.service';
 import { MenuService } from './menu/menu.service';
 import { RestaurantService } from './restaurant/restaurant.service';
 import { Restaurant } from './restaurant/schema/restaurant.schema';
+import * as mongoose from 'mongoose';
 
 @Controller('api')
 export class ApiController {
@@ -21,7 +22,7 @@ export class ApiController {
       let restaurant: Restaurant
       if (code != null && code != '') {
         restaurant = await this.restaurantService.findOneByCode(code);
-      } else if (id != null && id != '') {
+      } else if (id != null && id != '' && mongoose.isValidObjectId(id)) {
         restaurant = await this.restaurantService.findOneById(id);
       } else {
         throw new BadRequestException()
