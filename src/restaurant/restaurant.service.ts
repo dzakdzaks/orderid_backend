@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
-import { Restaurant, RestaurantDocument } from './schemas/restaurant.schema';
+import { Restaurant, RestaurantDocument } from './schema/restaurant.schema';
 
 @Injectable()
 export class RestaurantService {
@@ -16,7 +16,11 @@ export class RestaurantService {
         return await this.model.find().exec();
     }
 
-    async findOne(code: String): Promise<Restaurant> {
+    async findOneById(id: String): Promise<Restaurant> {
+        return await this.model.findById(id).exec()
+    }
+
+    async findOneByCode(code: String): Promise<Restaurant> {
         return await this.model.findOne({ 'code': code }).exec()
     }
 

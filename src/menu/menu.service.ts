@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateMenuDto } from './dto/create-menu.dto';
 import { UpdateMenuDto } from './dto/update-menu.dto';
-import { Menu, MenuDocument } from './schemas/menu.schema';
+import { Menu, MenuDocument } from './schema/menu.schema';
 
 @Injectable()
 export class MenuService {

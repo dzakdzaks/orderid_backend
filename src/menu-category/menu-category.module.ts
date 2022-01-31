@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MenuCategoryController } from './menu-category.controller';
 import { MenuCategoryService } from './menu-category.service';
-import { MenuCategory, MenuCategorySchema } from './schemas/menu-category.schema';
+import { MenuCategory, MenuCategorySchema } from './schema/menu-category.schema';
 
 @Module({
   controllers: [MenuCategoryController],

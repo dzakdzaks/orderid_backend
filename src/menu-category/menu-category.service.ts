@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BaseMenuCategoryDto } from './dto/base-menu-category.dto';
-import { MenuCategory, MenuCategoryDocument } from './schemas/menu-category.schema';
+import { MenuCategory, MenuCategoryDocument } from './schema/menu-category.schema';
 
 @Injectable()
 export class MenuCategoryService {

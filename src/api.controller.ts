@@ -1,9 +1,8 @@
-import { BadRequestException, Controller, Get, NotFoundException, Param } from '@nestjs/common';
-import { AppService } from './app.service';
+import { BadRequestException, Controller, Get, NotFoundException, Param, Query } from '@nestjs/common';
 import { MenuCategoryService } from './menu-category/menu-category.service';
-import { MenuCategory } from './menu-category/schemas/menu-category.schema';
 import { MenuService } from './menu/menu.service';
 import { RestaurantService } from './restaurant/restaurant.service';
+import { Restaurant } from './restaurant/schema/restaurant.schema';
 
 @Controller('api')
 export class ApiController {
@@ -13,13 +12,21 @@ export class ApiController {
     private readonly menuService: MenuService
   ) { }
 
-  @Get('get-restaurant/:code')
+  @Get('get-restaurant')
   async getRestaurant(
-    @Param('code') code: String
+    @Query('id') id: String,
+    @Query('code') code: String
   ) {
     try {
-      const restaurant = await this.restaurantService.findOne(code)
-      if(!restaurant) {
+      let restaurant: Restaurant
+      if (code != null && code != '') {
+        restaurant = await this.restaurantService.findOneByCode(code);
+      } else if (id != null && id != '') {
+        restaurant = await this.restaurantService.findOneById(id);
+      } else {
+        throw new BadRequestException()
+      }
+      if (!restaurant) {
         throw new NotFoundException()
       }
       const menuCategories = await this.menuCategoryService.findByRestaurant(restaurant._id.toString(), 0)

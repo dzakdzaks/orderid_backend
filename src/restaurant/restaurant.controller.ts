@@ -1,9 +1,10 @@
-import { BadRequestException, Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Post, Put, Req } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Post, Put, Query, Req } from '@nestjs/common';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import { RestaurantService } from './restaurant.service';
 import * as mongoose from 'mongoose';
 import { Request } from 'express';
+import { Restaurant } from './schema/restaurant.schema';
 
 @Controller('api/restaurant')
 export class RestaurantController {
@@ -18,9 +19,19 @@ export class RestaurantController {
         return restaurants
     }
 
-    @Get(':code')
-    async find(@Param('code') code: String) {
-        const restaurant = await this.service.findOne(code);
+    @Get('get-one')
+    async find(
+        @Query('id') id: String,
+        @Query('code') code: String
+    ) {
+        let restaurant: Restaurant
+        if (code != null && code != '') {
+            restaurant = await this.service.findOneByCode(code);
+        } else if (id != null && id != '') {
+            restaurant = await this.service.findOneById(id);
+        } else {
+            throw new BadRequestException()
+        }
         if (!restaurant) {
             throw new NotFoundException();
             

@@ -1,35 +1,37 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { RestaurantModule } from './restaurant/restaurant.module';
 import { MongooseModule } from '@nestjs/mongoose';
-import { MenuModule } from './menu/menu.module';
-import { MenuCategoryModule } from './menu-category/menu-category.module';
-import { PreAuthMiddleware } from './middleware/preauth.middleware';
-import { FirebaseApp } from './firebase/firebase-app';
+import { PreAuthMiddleware } from './utility/middleware/preauth.middleware';
+import { FirebaseApp } from './utility/firebase/firebase-app';
 import { ApiController } from './api.controller';
+import { Restaurant, RestaurantSchema } from './restaurant/schema/restaurant.schema';
+import { RestaurantModule } from './restaurant/restaurant.module';
 import { RestaurantService } from './restaurant/restaurant.service';
-import { Restaurant, RestaurantSchema } from './restaurant/schemas/restaurant.schema';
-import { MenuCategory, MenuCategorySchema } from './menu-category/schemas/menu-category.schema';
-import { Menu, MenuSchema } from './menu/schemas/menu.schema';
+import { MenuCategory, MenuCategorySchema } from './menu-category/schema/menu-category.schema';
+import { MenuCategoryModule } from './menu-category/menu-category.module';
 import { MenuCategoryService } from './menu-category/menu-category.service';
+import { Menu, MenuSchema } from './menu/schema/menu.schema';
+import { MenuModule } from './menu/menu.module';
 import { MenuService } from './menu/menu.service';
-import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
+import { UserService } from './user/user.service';
 
 @Module({
   imports: [
     MongooseModule.forRoot('mongodb+srv://dzakdzaks:dzakdzaks@firstcluster.wlsr7.mongodb.net/orderid_db?retryWrites=true&w=majority'),
-    RestaurantModule,
-    MenuModule,
-    MenuCategoryModule,
     MongooseModule.forFeature([
       { name: Restaurant.name, schema: RestaurantSchema },
       { name: MenuCategory.name, schema: MenuCategorySchema },
       { name: Menu.name, schema: MenuSchema },
     ]),
-    AuthModule],
+    RestaurantModule,
+    MenuModule,
+    MenuCategoryModule,
+    UserModule
+  ],
   controllers: [AppController, ApiController],
-  providers: [AppService, FirebaseApp, RestaurantService, MenuCategoryService, MenuService],
+  providers: [AppService, FirebaseApp, RestaurantService, MenuCategoryService, MenuService, UserService],
 })
 
 export class AppModule implements NestModule {
