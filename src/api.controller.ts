@@ -22,11 +22,16 @@ export class ApiController {
       if(!restaurant) {
         throw new NotFoundException()
       }
-      const pinnedMenus = await this.menuService.findPinnedMenuByRestaurant(restaurant._id.toString(), 0)
       const menuCategories = await this.menuCategoryService.findByRestaurant(restaurant._id.toString(), 0)
-      for (let n = 0; n < menuCategories.length; n++) {
-        menuCategories[n].menus = await this.menuService.findByMenuCategory(menuCategories[n]._id.toString(), 0)
-      }
+      const menus = await this.menuService.findByRestaurant(restaurant._id.toString(), 0)
+      const pinnedMenus = menus.filter((item) => {
+        return item.isPinnedMenu == true
+      })
+      menuCategories.map((item) => {
+        return item.menus = menus.filter((menu) => {
+          return menu.menuCategory == item._id
+        })
+      })
       return { restaurant, pinnedMenus, menuCategories }
     } catch (error) {
       throw new BadRequestException(error)
