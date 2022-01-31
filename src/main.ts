@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { HttpExceptionFilter } from './utility/http-exception.filter';
-import { TransformInterceptor } from './utility/transform.interceptor';
+import { HttpExceptionFilter } from './filter/http-exception.filter';
+import { TransformInterceptor } from './interceptor/transform.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
