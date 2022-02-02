@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import * as mongoose from 'mongoose';
+import { AddOn } from "src/data/add-on/schema/add-on.schema";
 import { MenuCategory } from "src/data/menu-category/schema/menu-category.schema";
 import { Restaurant } from "src/data/restaurant/schema/restaurant.schema";
 
@@ -32,6 +33,9 @@ export class Menu {
 
     @Prop()
     imageUrl?: string;
+
+    @Prop()
+    addOns?: AddOn[]
 }
 
 export const MenuSchema = SchemaFactory.createForClass(Menu);

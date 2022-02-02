@@ -1,4 +1,5 @@
-import { IsBoolean, IsNotEmpty, IsNumber, IsString } from "class-validator"
+import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsString } from "class-validator"
+import { AddOn } from "src/data/add-on/schema/add-on.schema"
 
 export class BaseMenuDto {
     @IsString()
@@ -29,4 +30,7 @@ export class BaseMenuDto {
 
     @IsString()
     imageUrl?: string
+
+    @IsArray()
+    addOns?: AddOn[]
 }

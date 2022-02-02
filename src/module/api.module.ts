@@ -13,16 +13,20 @@ import { FirebaseApp } from 'src/data/firebase/firebase-app';
 import { User, UserSchema } from '../data/user/schema/user.schema';
 import { UserController } from '../controller/user.controller';
 import { UserService } from '../service/user.service';
+import { AddOnController } from 'src/controller/add-on.controller';
+import { AddOnService } from 'src/service/add-on.service';
+import { AddOn, AddOnSchema } from 'src/data/add-on/schema/add-on.schema';
 
 @Module({
-  controllers: [UserController, RestaurantController, MenuController, MenuCategoryController],
-  providers: [UserService, RestaurantService, MenuService, MenuCategoryService, FirebaseApp],
+  controllers: [UserController, RestaurantController, MenuController, MenuCategoryController, AddOnController],
+  providers: [FirebaseApp, UserService, RestaurantService, MenuService, MenuCategoryService, AddOnService],
   imports: [
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },
       { name: Restaurant.name, schema: RestaurantSchema },
       { name: Menu.name, schema: MenuSchema },
-      { name: MenuCategory.name, schema: MenuCategorySchema }
+      { name: MenuCategory.name, schema: MenuCategorySchema },
+      { name: AddOn.name, schema: AddOnSchema }
     ]),
     MongooseModule.forFeatureAsync([
       {
