@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateMenuDto } from './dto/create-menu.dto';
-import { UpdateMenuDto } from './dto/update-menu.dto';
-import { Menu, MenuDocument } from './schema/menu.schema';
+import { Menu, MenuDocument } from 'src/data/menu/schema/menu.schema';
+import { CreateMenuDto } from 'src/data/menu/dto/create-menu.dto';
+import { UpdateMenuDto } from 'src/data/menu/dto/update-menu.dto';
 
 @Injectable()
 export class MenuService {

@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import * as mongoose from 'mongoose';
-import { Menu } from "src/menu/schema/menu.schema";
-import { Restaurant } from "src/restaurant/schema/restaurant.schema";
+import { Menu } from "src/data/menu/schema/menu.schema";
+import { Restaurant } from "src/data/restaurant/schema/restaurant.schema";
 
 export type MenuCategoryDocument = MenuCategory & Document
 

@@ -1,13 +1,13 @@
 import { BadRequestException, Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Query } from '@nestjs/common';
-import { CreateMenuDto } from './dto/create-menu.dto';
-import { UpdateMenuDto } from './dto/update-menu.dto';
-import { MenuService } from './menu.service';
 import * as mongoose from 'mongoose';
+import { CreateMenuCategoryDto } from 'src/data/menu-category/dto/create-menu-category.dto';
+import { UpdateMenuCategoryDto } from 'src/data/menu-category/dto/update-menu-category.dto';
+import { MenuCategoryService } from 'src/service/menu-category.service';
 
-@Controller('api/menu')
-export class MenuController {
+@Controller('api/menu-category')
+export class MenuCategoryController {
     constructor(
-        private readonly service: MenuService
+        private readonly service: MenuCategoryService
     ) { }
 
     @Get('all')
@@ -15,11 +15,11 @@ export class MenuController {
         @Query('isPopulated') isPopulated: number
     ) {
         try {
-            const menus = await this.service.findAll(isPopulated);
-            if (!menus || menus.length == 0) {
-                throw new NotFoundException()
+            const menuCategory = await this.service.findAll(isPopulated);
+            if (!menuCategory || menuCategory.length == 0) {
+                throw new NotFoundException();
             }
-            return menus
+            return menuCategory
         } catch (error) {
             throw new BadRequestException(error)
         }
@@ -34,30 +34,11 @@ export class MenuController {
             if (!mongoose.isValidObjectId(restaurantId)) {
                 throw new BadRequestException()
             }
-            const menus = await this.service.findByRestaurant(restaurantId, isPopulated);
-            if (!menus || menus.length == 0) {
-                throw new NotFoundException()
+            const menuCategories = await this.service.findByRestaurant(restaurantId, isPopulated);
+            if (!menuCategories || menuCategories.length == 0) {
+                throw new NotFoundException();
             }
-            return menus
-        } catch (error) {
-            throw new BadRequestException(error)
-        }
-    }
-
-    @Get('get-by-menu-category/:id')
-    async findByMenuCategory(
-        @Param('id') menuCategoryId: String,
-        @Query('isPopulated') isPopulated: number
-    ) {
-        try {
-            if (!mongoose.isValidObjectId(menuCategoryId)) {
-                throw new BadRequestException()
-            }
-            const menus = await this.service.findByMenuCategory(menuCategoryId, isPopulated);
-            if (!menus || menus.length == 0) {
-                throw new NotFoundException()
-            }
-            return menus
+            return menuCategories
         } catch (error) {
             throw new BadRequestException(error)
         }
@@ -72,18 +53,19 @@ export class MenuController {
             if (!mongoose.isValidObjectId(id)) {
                 throw new BadRequestException()
             }
-            const menu = await this.service.findOne(id, isPopulated);
-            if (!menu) {
-                throw new NotFoundException()
+            const menuCategory = await this.service.findOne(id, isPopulated);
+            if (!menuCategory) {
+                throw new NotFoundException();
             }
-            return menu
+            return menuCategory
         } catch (error) {
             throw new BadRequestException(error)
         }
+
     }
 
     @Post('create')
-    async create(@Body() createMenuDto: CreateMenuDto) {
+    async create(@Body() createMenuDto: CreateMenuCategoryDto) {
         try {
             return await this.service.create(createMenuDto);
         } catch (error) {
@@ -92,7 +74,7 @@ export class MenuController {
     }
 
     @Put('update/:id')
-    async update(@Param('id') id: String, @Body() updateMenuDto: UpdateMenuDto) {
+    async update(@Param('id') id: String, @Body() updateMenuDto: UpdateMenuCategoryDto) {
         try {
             if (!mongoose.isValidObjectId(id)) {
                 throw new BadRequestException()

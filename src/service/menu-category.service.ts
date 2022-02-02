@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { BaseMenuCategoryDto } from './dto/base-menu-category.dto';
-import { MenuCategory, MenuCategoryDocument } from './schema/menu-category.schema';
+import { MenuCategory, MenuCategoryDocument } from 'src/data/menu-category/schema/menu-category.schema';
+import { BaseMenuCategoryDto } from '../data/menu-category/dto/base-menu-category.dto';
 
 @Injectable()
 export class MenuCategoryService {

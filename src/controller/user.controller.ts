@@ -1,7 +1,7 @@
 import { BadRequestException, Controller, NotFoundException, Post, Req } from '@nestjs/common';
 import { Request } from 'express';
-import { UserService } from './user.service';
-import { FirebaseApp } from 'src/utility/firebase/firebase-app';
+import { UserService } from 'src/service/user.service';
+import { FirebaseApp } from 'src/data/firebase/firebase-app';
 
 @Controller('api/user')
 export class UserController {

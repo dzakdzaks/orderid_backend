@@ -1,16 +1,55 @@
 import { BadRequestException, Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Post, Put, Query, Req } from '@nestjs/common';
-import { CreateRestaurantDto } from './dto/create-restaurant.dto';
-import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
-import { RestaurantService } from './restaurant.service';
+import { CreateRestaurantDto } from 'src/data/restaurant/dto/create-restaurant.dto';
+import { UpdateRestaurantDto } from 'src/data/restaurant/dto/update-restaurant.dto';
+import { RestaurantService } from 'src/service/restaurant.service';
 import * as mongoose from 'mongoose';
-import { Restaurant } from './schema/restaurant.schema';
+import { Restaurant } from 'src/data/restaurant/schema/restaurant.schema';
+import { MenuCategoryService } from 'src/service/menu-category.service';
+import { MenuService } from 'src/service/menu.service';
 
 @Controller('api/restaurant')
 export class RestaurantController {
-    constructor(private readonly service: RestaurantService) { }
+    constructor(
+        private readonly service: RestaurantService,
+        private readonly menuCategoryService: MenuCategoryService,
+        private readonly menuService: MenuService,
+    ) { }
+
+    @Get('get-restaurant')
+    async getRestaurant(
+        @Query('id') id: String,
+        @Query('code') code: String
+    ) {
+        try {
+            let restaurant: Restaurant
+            if (code != null && code != '') {
+                restaurant = await this.service.findOneByCode(code);
+            } else if (id != null && id != '' && mongoose.isValidObjectId(id)) {
+                restaurant = await this.service.findOneById(id);
+            } else {
+                throw new BadRequestException()
+            }
+            if (!restaurant) {
+                throw new NotFoundException()
+            }
+            const menuCategories = await this.menuCategoryService.findByRestaurant(restaurant._id.toString(), 0)
+            const menus = await this.menuService.findByRestaurant(restaurant._id.toString(), 0)
+            const pinnedMenus = menus.filter((item) => {
+                return item.isPinnedMenu == true
+            })
+            menuCategories.map((item) => {
+                return item.menus = menus.filter((menu) => {
+                    return menu.menuCategory == item._id
+                })
+            })
+            return { restaurant, pinnedMenus, menuCategories }
+        } catch (error) {
+            throw new BadRequestException(error)
+        }
+    }
 
     @Get('all')
-    async all() {
+    async allRestaurant() {
         try {
             const restaurants = await this.service.findAll();
             if (!restaurants && restaurants.length == 0) {
@@ -83,7 +122,7 @@ export class RestaurantController {
                 throw new BadRequestException()
             }
             const restaurant = await this.service.delete(id);
-            return { restaurant }
+            return restaurant
         } catch (error) {
             throw new BadRequestException(error)
         }

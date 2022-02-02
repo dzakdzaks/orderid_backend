@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { AppModule } from './app/app.module';
 import { HttpExceptionFilter } from './utility/filter/http-exception.filter';
 import { TransformInterceptor } from './utility/interceptor/transform.interceptor';
 
