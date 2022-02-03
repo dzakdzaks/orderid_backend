@@ -12,7 +12,7 @@ export class MenuCategory {
     @Prop({ required: true, type: mongoose.Types.ObjectId, ref: Restaurant.name })
     restaurant: mongoose.Types.ObjectId;
 
-    @Prop({ required: true, unique: true})
+    @Prop({ required: true })
     name: string;
 
     @Prop()

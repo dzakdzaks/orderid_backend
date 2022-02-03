@@ -20,9 +20,6 @@ export class AddOnController {
                 throw new BadRequestException(`There is no type with name ${createAddOnDto.type}`)
             }
         } catch (error) {
-            if (error.message.includes('to be unique')) {
-                throw new ConflictException(error)
-            }
             throw new BadRequestException(error )
         }
     }

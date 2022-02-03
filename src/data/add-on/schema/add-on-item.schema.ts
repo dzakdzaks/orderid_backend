@@ -7,7 +7,7 @@ export type AddOnItemDocument = AddOnItem & Document
 export class AddOnItem {
     _id: Types.ObjectId
 
-    @Prop({ require: true, unique: true })
+    @Prop({ require: true })
     name: string
 
     @Prop({ required: true })

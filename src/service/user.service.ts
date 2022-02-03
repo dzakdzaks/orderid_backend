@@ -13,7 +13,9 @@ export class UserService {
     ) {}
 
     async findByUid(uid: String): Promise<User> {
-        return await this.model.findOne({ 'uid': uid }).exec()
+        return await this.model.findOne({ 'uid': uid })
+        .populate({ path: 'restaurant' })
+        .exec()
     }
 
     async register(createUserDto: CreateUserDto): Promise<User> {

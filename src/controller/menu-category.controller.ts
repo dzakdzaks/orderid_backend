@@ -69,9 +69,6 @@ export class MenuCategoryController {
         try {
             return await this.service.create(createMenuDto);
         } catch (error) {
-            if (error.message.includes('name') && error.message.includes('to be unique')) {
-                throw new ConflictException('Name already exist.')
-            }
             throw new BadRequestException(error)
         }
     }
