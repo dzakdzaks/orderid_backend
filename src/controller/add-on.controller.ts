@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
+import { BadRequestException, Body, ConflictException, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
 import { CreateAddOnDto } from "src/data/add-on/dto/create-add-on.dto";
 import { UpdateAddOnDto } from "src/data/add-on/dto/update-add-on.dto";
 import { AddOnService } from "src/service/add-on.service";
@@ -20,6 +20,9 @@ export class AddOnController {
                 throw new BadRequestException(`There is no type with name ${createAddOnDto.type}`)
             }
         } catch (error) {
+            if (error.message.includes('to be unique')) {
+                throw new ConflictException(error)
+            }
             throw new BadRequestException(error )
         }
     }

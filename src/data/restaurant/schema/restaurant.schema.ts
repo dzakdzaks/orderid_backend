@@ -7,13 +7,13 @@ export type RestaurantDocument = Restaurant & Document;
 export class Restaurant {
     _id: mongoose.Types.ObjectId
 
-    @Prop({ required: true })
+    @Prop()
     name: string;
 
-    @Prop({ required: true, unique: true })
+    @Prop({ unique: true })
     code: string;
 
-    @Prop({ required: true })
+    @Prop()
     address?: string;
 
     @Prop()

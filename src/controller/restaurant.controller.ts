@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Post, Put, Query, Req } from '@nestjs/common';
+import { BadRequestException, Body, ConflictException, Controller, Delete, Get, HttpCode, NotFoundException, Param, Post, Put, Query, Req } from '@nestjs/common';
 import { CreateRestaurantDto } from 'src/data/restaurant/dto/create-restaurant.dto';
 import { UpdateRestaurantDto } from 'src/data/restaurant/dto/update-restaurant.dto';
 import { RestaurantService } from 'src/service/restaurant.service';
@@ -91,7 +91,7 @@ export class RestaurantController {
             const restaurant = await this.service.create(createRestaurantDto);
             return restaurant
         } catch (error) {
-            if (error.message.includes('code')) {
+            if (error.message.includes('code') && error.message.includes('to be unique')) {
                 throw new BadRequestException('Code already exist, try another code')
             }
             throw new BadRequestException(error)

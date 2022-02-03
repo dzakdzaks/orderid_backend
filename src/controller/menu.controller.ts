@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Query } from '@nestjs/common';
+import { BadRequestException, Body, ConflictException, Controller, Delete, Get, NotFoundException, Param, Post, Put, Query } from '@nestjs/common';
 import { CreateMenuDto } from 'src/data/menu/dto/create-menu.dto';
 import { UpdateMenuDto } from 'src/data/menu/dto/update-menu.dto';
 import { MenuService } from 'src/service/menu.service';
@@ -91,6 +91,9 @@ export class MenuController {
         try {
             return await this.service.create(createMenuDto);
         } catch (error) {
+            if (error.message.includes('name') && error.message.includes('to be unique')) {
+                throw new ConflictException('Name already exist.')
+            }
             throw new BadRequestException(error)
         }
     }

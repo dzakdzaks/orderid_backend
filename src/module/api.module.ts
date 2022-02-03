@@ -16,6 +16,7 @@ import { UserService } from '../service/user.service';
 import { AddOnController } from 'src/controller/add-on.controller';
 import { AddOnService } from 'src/service/add-on.service';
 import { AddOn, AddOnSchema } from 'src/data/add-on/schema/add-on.schema';
+import { AddOnItem, AddOnItemSchema } from 'src/data/add-on/schema/add-on-item.schema';
 
 @Module({
   controllers: [UserController, RestaurantController, MenuController, MenuCategoryController, AddOnController],
@@ -41,6 +42,38 @@ import { AddOn, AddOnSchema } from 'src/data/add-on/schema/add-on.schema';
         name: Restaurant.name,
         useFactory: () => {
           const schema = RestaurantSchema;
+          schema.plugin(require('mongoose-unique-validator'));
+          return schema;
+        },
+      },
+      {
+        name: MenuCategory.name,
+        useFactory: () => {
+          const schema = MenuCategorySchema;
+          schema.plugin(require('mongoose-unique-validator'));
+          return schema;
+        },
+      },
+      {
+        name: Menu.name,
+        useFactory: () => {
+          const schema = MenuSchema;
+          schema.plugin(require('mongoose-unique-validator'));
+          return schema;
+        },
+      },
+      {
+        name: AddOn.name,
+        useFactory: () => {
+          const schema = AddOnSchema;
+          schema.plugin(require('mongoose-unique-validator'));
+          return schema;
+        },
+      },
+      {
+        name: AddOnItem.name,
+        useFactory: () => {
+          const schema = AddOnItemSchema;
           schema.plugin(require('mongoose-unique-validator'));
           return schema;
         },

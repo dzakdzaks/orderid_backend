@@ -14,7 +14,7 @@ export type AddOnDocument = AddOn & Document
 export class AddOn {
     _id: Types.ObjectId
 
-    @Prop({ require: true })
+    @Prop({ require: true, unique: true })
     name: string
 
     @Prop({ required: true, type: Types.ObjectId, ref: Menu.name })

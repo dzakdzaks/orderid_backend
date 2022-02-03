@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Query } from '@nestjs/common';
+import { BadRequestException, Body, ConflictException, Controller, Delete, Get, NotFoundException, Param, Post, Put, Query } from '@nestjs/common';
 import * as mongoose from 'mongoose';
 import { CreateMenuCategoryDto } from 'src/data/menu-category/dto/create-menu-category.dto';
 import { UpdateMenuCategoryDto } from 'src/data/menu-category/dto/update-menu-category.dto';
@@ -69,6 +69,9 @@ export class MenuCategoryController {
         try {
             return await this.service.create(createMenuDto);
         } catch (error) {
+            if (error.message.includes('name') && error.message.includes('to be unique')) {
+                throw new ConflictException('Name already exist.')
+            }
             throw new BadRequestException(error)
         }
     }
