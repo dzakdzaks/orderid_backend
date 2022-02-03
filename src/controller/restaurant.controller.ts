@@ -7,8 +7,6 @@ import { Restaurant } from 'src/data/restaurant/schema/restaurant.schema';
 import { MenuCategoryService } from 'src/service/menu-category.service';
 import { MenuService } from 'src/service/menu.service';
 import { UserService } from 'src/service/user.service';
-import { UpdateUserDto } from 'src/data/user/dto/update-user.dto';
-import { UpdateUserRestaurantDto } from 'src/data/user/dto/update-user-restaurant.dto';
 import { Request } from 'express';
 
 @Controller('api/restaurant')
@@ -99,11 +97,7 @@ export class RestaurantController {
             }
             await this.service.create(createRestaurantDto);
             const restaurantResult = await this.service.findOneByCode(createRestaurantDto.code)
-            const user = await this.userService.findByUid(uid);
-            const updateUserDto: UpdateUserRestaurantDto = {
-                restaurant: restaurantResult._id.toString()
-            }
-            await this.userService.updateRestaurant(user._id.toString(), updateUserDto)
+            await this.userService.updateRestaurantId(uid, restaurantResult._id.toString())
             return restaurantResult
         } catch (error) {
             if (error.message.includes('code') && error.message.includes('to be unique')) {

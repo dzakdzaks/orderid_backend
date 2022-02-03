@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateUserDto } from 'src/data/user/dto/create-user.dto';
-import { UpdateUserRestaurantDto } from 'src/data/user/dto/update-user-restaurant.dto';
 import { UpdateUserDto } from 'src/data/user/dto/update-user.dto';
 import { User, UserDocument } from '../data/user/schema/user.schema';
 
@@ -25,8 +24,8 @@ export class UserService {
         }).save();
     }
 
-    async updateRestaurant(id: String, updateUserDto: UpdateUserRestaurantDto): Promise<User> {
-        return await this.model.findByIdAndUpdate(id, updateUserDto).exec();
+    async updateRestaurantId(uid: String, restaurantId: string): Promise<User> {
+        return await this.model.findOneAndUpdate({ 'uid': uid }, { 'restaurant': restaurantId }).exec();
     }
 
     async update(id: String, updateUserDto: UpdateUserDto): Promise<User> {
