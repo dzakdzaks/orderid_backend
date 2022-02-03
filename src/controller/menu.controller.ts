@@ -1,4 +1,4 @@
-import { BadRequestException, Body, ConflictException, Controller, Delete, Get, NotFoundException, Param, Post, Put, Query } from '@nestjs/common';
+import { BadRequestException, Body, ConflictException, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { CreateMenuDto } from 'src/data/menu/dto/create-menu.dto';
 import { UpdateMenuDto } from 'src/data/menu/dto/update-menu.dto';
 import { MenuService } from 'src/service/menu.service';
@@ -95,7 +95,7 @@ export class MenuController {
         }
     }
 
-    @Put('update/:id')
+    @Patch('update/:id')
     async update(@Param('id') id: String, @Body() updateMenuDto: UpdateMenuDto) {
         try {
             if (!mongoose.isValidObjectId(id)) {
@@ -107,7 +107,7 @@ export class MenuController {
         }
     }
 
-    @Delete('delete/:id')
+    @Post('delete/:id')
     async delete(@Param('id') id: String) {
         try {
             if (!mongoose.isValidObjectId(id)) {

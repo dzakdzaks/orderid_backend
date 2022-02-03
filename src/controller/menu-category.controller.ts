@@ -1,4 +1,4 @@
-import { BadRequestException, Body, ConflictException, Controller, Delete, Get, NotFoundException, Param, Post, Put, Query } from '@nestjs/common';
+import { BadRequestException, Body, ConflictException, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import * as mongoose from 'mongoose';
 import { CreateMenuCategoryDto } from 'src/data/menu-category/dto/create-menu-category.dto';
 import { UpdateMenuCategoryDto } from 'src/data/menu-category/dto/update-menu-category.dto';
@@ -73,7 +73,7 @@ export class MenuCategoryController {
         }
     }
 
-    @Put('update/:id')
+    @Patch('update/:id')
     async update(@Param('id') id: String, @Body() updateMenuDto: UpdateMenuCategoryDto) {
         try {
             if (!mongoose.isValidObjectId(id)) {
@@ -85,7 +85,7 @@ export class MenuCategoryController {
         }
     }
 
-    @Delete('delete/:id')
+    @Post('delete/:id')
     async delete(@Param('id') id: String) {
         try {
             if (!mongoose.isValidObjectId(id)) {

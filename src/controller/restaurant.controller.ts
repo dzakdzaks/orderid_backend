@@ -1,4 +1,4 @@
-import { BadRequestException, Body, ConflictException, Controller, Delete, Get, HttpCode, NotFoundException, Param, Post, Put, Query, Req } from '@nestjs/common';
+import { BadRequestException, Body, ConflictException, Controller, Delete, Get, HttpCode, NotFoundException, Param, Patch, Post, Put, Query, Req } from '@nestjs/common';
 import { CreateRestaurantDto } from 'src/data/restaurant/dto/create-restaurant.dto';
 import { UpdateRestaurantDto } from 'src/data/restaurant/dto/update-restaurant.dto';
 import { RestaurantService } from 'src/service/restaurant.service';
@@ -6,6 +6,10 @@ import * as mongoose from 'mongoose';
 import { Restaurant } from 'src/data/restaurant/schema/restaurant.schema';
 import { MenuCategoryService } from 'src/service/menu-category.service';
 import { MenuService } from 'src/service/menu.service';
+import { UserService } from 'src/service/user.service';
+import { UpdateUserDto } from 'src/data/user/dto/update-user.dto';
+import { UpdateUserRestaurantDto } from 'src/data/user/dto/update-user-restaurant.dto';
+import { Request } from 'express';
 
 @Controller('api/restaurant')
 export class RestaurantController {
@@ -13,6 +17,7 @@ export class RestaurantController {
         private readonly service: RestaurantService,
         private readonly menuCategoryService: MenuCategoryService,
         private readonly menuService: MenuService,
+        private readonly userService: UserService
     ) { }
 
     @Get('get-restaurant')
@@ -86,10 +91,20 @@ export class RestaurantController {
     }
 
     @Post('create')
-    async create(@Body() createRestaurantDto: CreateRestaurantDto) {
+    async create(@Req() request: Request, @Body() createRestaurantDto: CreateRestaurantDto) {
         try {
-            const restaurant = await this.service.create(createRestaurantDto);
-            return restaurant
+            const uid = request['user'].uid;
+            if (uid == null) {
+                throw new BadRequestException('uid not found')
+            }
+            await this.service.create(createRestaurantDto);
+            const restaurantResult = await this.service.findOneByCode(createRestaurantDto.code)
+            const user = await this.userService.findByUid(uid);
+            const updateUserDto: UpdateUserRestaurantDto = {
+                restaurant: restaurantResult._id.toString()
+            }
+            await this.userService.updateRestaurant(user._id.toString(), updateUserDto)
+            return restaurantResult
         } catch (error) {
             if (error.message.includes('code') && error.message.includes('to be unique')) {
                 throw new BadRequestException('Code already exist, try another code')
@@ -98,7 +113,7 @@ export class RestaurantController {
         }
     }
 
-    @Put('update/:id')
+    @Patch('update/:id')
     async update(@Param('id') id: String, @Body() updateRestaurantDto: UpdateRestaurantDto) {
         try {
             if (!mongoose.isValidObjectId(id)) {
@@ -115,7 +130,7 @@ export class RestaurantController {
 
     }
 
-    @Delete('delete/:id')
+    @Post('delete/:id')
     async delete(@Param('id') id: String) {
         try {
             if (!mongoose.isValidObjectId(id)) {

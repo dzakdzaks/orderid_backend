@@ -1,4 +1,4 @@
-import { BadRequestException, Body, ConflictException, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
+import { BadRequestException, Body, ConflictException, Controller, Delete, Get, Param, Patch, Post, Put } from "@nestjs/common";
 import { CreateAddOnDto } from "src/data/add-on/dto/create-add-on.dto";
 import { UpdateAddOnDto } from "src/data/add-on/dto/update-add-on.dto";
 import { AddOnService } from "src/service/add-on.service";
@@ -24,7 +24,7 @@ export class AddOnController {
         }
     }
 
-    @Put('update/:id')
+    @Patch('update/:id')
     async update(@Param('id') id: string, @Body() updateAddOnDto: UpdateAddOnDto) {
         try {
             if (!mongoose.isValidObjectId(id)) {
@@ -43,7 +43,7 @@ export class AddOnController {
         }
     }
 
-    @Delete('delete/:id')
+    @Post('delete/:id')
     async delete(@Param('id') id: string) {
         try {
             if (!mongoose.isValidObjectId(id)) {
