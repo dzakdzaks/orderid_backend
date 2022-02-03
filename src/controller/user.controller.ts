@@ -14,28 +14,29 @@ export class UserController {
     async auth(@Req() request: Request) {
         try {
             const uid = request['user'].uid;
+            if (uid == null) {
+                throw new BadRequestException('uid not found')
+            }
             const user = await this.service.findByUid(uid);
             if (user == null) {
                 return this.firebaseAuth.getAuth()
                     .getUser(uid)
                     .then(async (userRecord) => {
+                        const email = userRecord.email ? userRecord.email : userRecord.providerData[0].email;
+                        const name = userRecord.displayName ? userRecord.displayName : email.split('@', 2)[0]
                         const createUserDto = {
-                            email: userRecord.email,
-                            uid: userRecord.uid,
-                            name: userRecord.displayName ? userRecord.displayName : userRecord.email.split('@', 2)[0]
+                            email: email,
+                            uid: uid,
+                            name: name
                         }
-                        try {
-                            await this.service.register(createUserDto)
-                            const user = await this.service.findByUid(uid);
-                            return { message: 'User Registered', user }
-                        } catch (error) {
-                            throw new BadRequestException(error)
-                        }
+                        await this.service.register(createUserDto)
+                        const user = await this.service.findByUid(uid);
+                        return { message: 'User Registered', user }
                     })
-                        .catch((error) => {
-                            console.log('Error fetching user data:', error);
-                            throw new BadRequestException(error)
-                        })
+                    .catch((error) => {
+                        console.log('Error fetching user data:', error);
+                        throw new BadRequestException(error)
+                    })
             } else {
                 return { message: 'User Logged In', user }
             }
