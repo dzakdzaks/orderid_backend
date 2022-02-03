@@ -1,4 +1,5 @@
 import { IsArray, IsEnum, IsNotEmpty, IsString } from "class-validator";
+import { AddOnItem } from "../schema/add-on-item.schema";
 import { AddOnType } from "../schema/add-on.schema";
 
 export class BaseAddOnDto {
@@ -16,5 +17,5 @@ export class BaseAddOnDto {
 
     @IsArray()
     @IsNotEmpty()
-    items: string[]
+    addOnItems: AddOnItem[]
 }
