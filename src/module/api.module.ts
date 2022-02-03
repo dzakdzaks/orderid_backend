@@ -45,38 +45,6 @@ import { AddOnItem, AddOnItemSchema } from 'src/data/add-on/schema/add-on-item.s
           schema.plugin(require('mongoose-unique-validator'));
           return schema;
         },
-      },
-      {
-        name: MenuCategory.name,
-        useFactory: () => {
-          const schema = MenuCategorySchema;
-          schema.plugin(require('mongoose-unique-validator'));
-          return schema;
-        },
-      },
-      {
-        name: Menu.name,
-        useFactory: () => {
-          const schema = MenuSchema;
-          schema.plugin(require('mongoose-unique-validator'));
-          return schema;
-        },
-      },
-      {
-        name: AddOn.name,
-        useFactory: () => {
-          const schema = AddOnSchema;
-          schema.plugin(require('mongoose-unique-validator'));
-          return schema;
-        },
-      },
-      {
-        name: AddOnItem.name,
-        useFactory: () => {
-          const schema = AddOnItemSchema;
-          schema.plugin(require('mongoose-unique-validator'));
-          return schema;
-        },
       }
     ])
   ]
