@@ -1,7 +1,8 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Exclude } from "class-transformer";
 import { Document, Types } from "mongoose";
 import { Menu } from "src/data/menu/schema/menu.schema";
-import { AddOnItemDocument, AddOnItemSchema } from "./add-on-item.schema";
+import { AddOnItem } from "./add-on-item.schema";
 
 export enum AddOnType {
     single = 'single',
@@ -23,12 +24,8 @@ export class AddOn {
     @Prop({ require: true })
     type: AddOnType
 
-    @Prop({
-        type: [
-            AddOnItemSchema
-        ]
-    })
-    addOnItems?: AddOnItemDocument[]
+    @Prop()
+    addOnItems?: AddOnItem[]
 }
 
 export const AddOnSchema = SchemaFactory.createForClass(AddOn);

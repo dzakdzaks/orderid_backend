@@ -27,7 +27,8 @@ import { AddOnItem, AddOnItemSchema } from 'src/data/add-on/schema/add-on-item.s
       { name: Restaurant.name, schema: RestaurantSchema },
       { name: Menu.name, schema: MenuSchema },
       { name: MenuCategory.name, schema: MenuCategorySchema },
-      { name: AddOn.name, schema: AddOnSchema }
+      { name: AddOn.name, schema: AddOnSchema },
+      { name: AddOnItem.name, schema: AddOnItemSchema }
     ]),
     MongooseModule.forFeatureAsync([
       {

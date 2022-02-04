@@ -78,8 +78,14 @@ export class MenuController {
             if (!menu) {
                 throw new NotFoundException()
             }
-            const addOn = await this.addOnService.findByMenu(menu._id.toString(), 0)
-            menu.addOns = addOn
+            const addOns = await this.addOnService.findByMenu(menu._id.toString(), 0)
+            const addOnItems = await this.addOnService.findAddOnItemsByMenuId(menu._id.toString(), 0)
+            addOns.map((data) => {
+                return data.addOnItems = addOnItems.filter((item) => {
+                    return item._id = data._id
+                })
+            })
+            menu.addOns = addOns
             return menu
         } catch (error) {
             throw new BadRequestException(error)

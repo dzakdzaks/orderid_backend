@@ -1,5 +1,4 @@
-import { IsArray, IsEnum, IsNotEmpty, IsString } from "class-validator";
-import { AddOnItem } from "../schema/add-on-item.schema";
+import { IsEnum, IsNotEmpty, IsString } from "class-validator";
 import { AddOnType } from "../schema/add-on.schema";
 
 export class BaseAddOnDto {
@@ -14,8 +13,4 @@ export class BaseAddOnDto {
     @IsEnum(AddOnType)
     @IsNotEmpty()
     type: AddOnType
-
-    @IsArray()
-    @IsNotEmpty()
-    addOnItems: AddOnItem[]
 }

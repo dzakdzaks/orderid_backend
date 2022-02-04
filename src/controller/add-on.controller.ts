@@ -4,6 +4,7 @@ import { UpdateAddOnDto } from "src/data/add-on/dto/update-add-on.dto";
 import { AddOnService } from "src/service/add-on.service";
 import * as mongoose from 'mongoose';
 import { AddOnType } from "src/data/add-on/schema/add-on.schema";
+import { AddOnItem } from "src/data/add-on/schema/add-on-item.schema";
 
 @Controller('api/add-on')
 export class AddOnController {
@@ -15,7 +16,14 @@ export class AddOnController {
     async create(@Body() createAddOnDto: CreateAddOnDto) {
         try {
             if (createAddOnDto.type in AddOnType) {
-                return await this.service.create(createAddOnDto)
+                const createdAddOn = await this.service.create(createAddOnDto)
+                createAddOnDto.addOnItems.map((data) => {
+                    data.addOn = createdAddOn._id
+                    data.menu = createdAddOn.menu
+                    return data
+                })
+                createdAddOn.addOnItems = await this.service.createAddOnItem(createAddOnDto.addOnItems)
+                return createdAddOn
             } else {
                 throw new BadRequestException(`There is no type with name ${createAddOnDto.type}`)
             }
