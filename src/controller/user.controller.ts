@@ -1,4 +1,4 @@
-import { BadRequestException, Controller, NotFoundException, Post, Req } from '@nestjs/common';
+import { BadRequestException, Controller, NotFoundException, Post, Query, Req } from '@nestjs/common';
 import { Request } from 'express';
 import { UserService } from 'src/service/user.service';
 import { FirebaseApp } from 'src/data/firebase/firebase-app';
@@ -9,6 +9,17 @@ export class UserController {
         private readonly service: UserService,
         private readonly firebaseAuth: FirebaseApp
     ) { }
+
+    @Post('employee-auth')
+    async login(@Query('id') id: string) {
+        return this.firebaseAuth.getAuth().createCustomToken(id)
+        .then((token) => {
+            return token
+        })
+        .catch((error) => {
+            console.log('Error creating custom token:', error);
+        });
+    }
 
     @Post('auth')
     async auth(@Req() request: Request) {

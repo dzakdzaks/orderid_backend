@@ -19,9 +19,9 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): any {
     consumer
       .apply(PreAuthMiddleware)
-      // .exclude(
-      //   'restaurant/(.*)'
-      // )
+      .exclude(
+        'api/user/employee-auth'
+      )
       .forRoutes({
         path: '*',
         method: RequestMethod.ALL
