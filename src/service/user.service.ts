@@ -12,6 +12,18 @@ export class UserService {
         private readonly model: Model<UserDocument>
     ) {}
 
+    async findByName(name: String): Promise<User> {
+        return await this.model.findOne({ 'name': name })
+        .populate({ path: 'restaurant' })
+        .exec()
+    }
+
+    async findById(id: String): Promise<User> {
+        return await this.model.findById(id)
+        .populate({ path: 'restaurant' })
+        .exec()
+    }
+
     async findByUid(uid: String): Promise<User> {
         return await this.model.findOne({ 'uid': uid })
         .populate({ path: 'restaurant' })

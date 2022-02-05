@@ -2,16 +2,17 @@ import { IsEmail, IsNotEmpty, IsString } from "class-validator";
 
 export class BaseUserDto {
     @IsEmail()
-    @IsNotEmpty()
-    email: string
+    email?: string
 
     @IsString()
-    @IsNotEmpty()
-    uid: string
+    uid?: string
 
     @IsString()
     @IsNotEmpty()
     name: string
+
+    @IsString()
+    password?: string
 
     @IsString()
     restaurant?: string

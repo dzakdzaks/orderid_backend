@@ -9,14 +9,17 @@ export type UserDocument = User & Document
 export class User {
     _id: mongoose.Types.ObjectId
 
-    @Prop({ required: true, unique: true })
+    @Prop({ unique: true })
     email: string;
 
-    @Prop({ required: true, unique: true })
+    @Prop({ unique: true })
     uid: string;
 
     @Prop({ required: true })
     name: string;
+
+    @Prop({ default: '' })
+    password: string;
 
     @Prop({ type: mongoose.Types.ObjectId, ref: Restaurant.name })
     restaurant?: mongoose.Types.ObjectId;
