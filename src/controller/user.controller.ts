@@ -3,6 +3,7 @@ import e, { Request } from 'express';
 import { UserService } from 'src/service/user.service';
 import { FirebaseApp } from 'src/data/firebase/firebase-app';
 import { CreateUserDto } from 'src/data/user/dto/create-user.dto';
+import * as bcrypt from 'bcrypt';
 
 @Controller('api/user')
 export class UserController {
@@ -20,14 +21,14 @@ export class UserController {
             const password = createUserDto.password
             const user = await this.service.findByName(username)
             if (user) {
-                if (user.name === username && user.password === password) {
+                if (user.name === username && await bcrypt.compare(password, user.password)) {
                     return this.firebaseAuth.getAuth().createCustomToken(password)
-                    .then(async (token) => {
-                        return { token, user }
-                    })
-                    .catch((error) => {
-                        console.log('Error creating custom token:', error);
-                    });
+                        .then(async (token) => {
+                            return { token, user }
+                        })
+                        .catch((error) => {
+                            console.log('Error creating custom token:', error);
+                        });
                 } else {
                     throw new BadRequestException('Username or Password is wrong.')
                 }
@@ -91,10 +92,15 @@ export class UserController {
         @Body() createUserDto: CreateUserDto
     ) {
         try {
+            const saltOrRounds = 10;
+            createUserDto.password = await bcrypt.hash(createUserDto.password, saltOrRounds);
+            createUserDto.uid = await bcrypt.hash(createUserDto.name, saltOrRounds);
+            const hashedName = await bcrypt.hash(createUserDto.name, saltOrRounds);
+            createUserDto.email = `${hashedName}@mail.com`
             const employee = await this.service.register(createUserDto)
             return { message: 'Employeee Added', employee }
         } catch (error) {
-            throw new BadRequestException()
+            throw new BadRequestException(error)
         }
     }
 }
