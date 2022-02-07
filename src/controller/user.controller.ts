@@ -4,6 +4,7 @@ import { UserService } from 'src/service/user.service';
 import { FirebaseApp } from 'src/data/firebase/firebase-app';
 import { CreateUserDto } from 'src/data/user/dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
+import { randomBytes } from 'crypto';
 
 @Controller('api/user')
 export class UserController {
@@ -19,11 +20,19 @@ export class UserController {
         try {
             const username = createUserDto.name
             const password = createUserDto.password
-            const user = await this.service.findByName(username)
-            if (user) {
-                if (user.name === username && await bcrypt.compare(password, user.password)) {
+            const userResult = await this.service.findByName(username)
+            if (userResult) {
+                if (userResult.name === username && await bcrypt.compare(password, userResult.password)) {
                     return this.firebaseAuth.getAuth().createCustomToken(password)
                         .then(async (token) => {
+                            const user = {
+                                _id: userResult._id,
+                                name: userResult.name,
+                                uid: userResult.uid,
+                                email: userResult.email,
+                                createdAt: userResult.createdAt,
+                                updatedAt: userResult.updatedAt
+                            }
                             return { token, user }
                         })
                         .catch((error) => {
@@ -71,7 +80,15 @@ export class UserController {
                                 name: name
                             }
                             await this.service.register(createUserDto)
-                            const user = await this.service.findByUid(uid);
+                            const userResult = await this.service.findByUid(uid);
+                            const user = {
+                                _id: userResult._id,
+                                name: userResult.name,
+                                uid: userResult.uid,
+                                email: userResult.email,
+                                createdAt: userResult.createdAt,
+                                updatedAt: userResult.updatedAt
+                            }
                             return { message: 'User Registered', user }
                         })
                         .catch((error) => {
@@ -94,11 +111,18 @@ export class UserController {
         try {
             const saltOrRounds = 10;
             createUserDto.password = await bcrypt.hash(createUserDto.password, saltOrRounds);
-            createUserDto.uid = await bcrypt.hash(createUserDto.name, saltOrRounds);
-            const hashedName = await bcrypt.hash(createUserDto.name, saltOrRounds);
-            createUserDto.email = `${hashedName}@mail.com`
+            createUserDto.uid = randomBytes(10).toString('hex');
+            createUserDto.email = `${randomBytes(10).toString('hex')}@mail.com`
             const employee = await this.service.register(createUserDto)
-            return { message: 'Employeee Added', employee }
+            const user = {
+                _id: employee._id,
+                name: employee.name,
+                uid: employee.uid,
+                email: employee.email,
+                createdAt: employee.createdAt,
+                updatedAt: employee.updatedAt
+            }
+            return { message: 'Employeee Added', user }
         } catch (error) {
             throw new BadRequestException(error)
         }
