@@ -5,12 +5,14 @@ import { FirebaseApp } from 'src/data/firebase/firebase-app';
 import { CreateUserDto } from 'src/data/user/dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
+import { RestaurantService } from 'src/service/restaurant.service';
 
 @Controller('api/user')
 export class UserController {
     constructor(
+        private readonly firebaseAuth: FirebaseApp,
         private readonly service: UserService,
-        private readonly firebaseAuth: FirebaseApp
+        private readonly restaurantService: RestaurantService
     ) { }
 
     @Post('employee-auth')
@@ -56,10 +58,18 @@ export class UserController {
     ) {
         try {
             if (userId) {
-                const user = await this.service.findById(userId);
-                if (user == null) {
+                const userResult = await this.service.findById(userId);
+                if (userResult == null) {
                     throw new NotFoundException('User not found.')
                 } else {
+                    const user = {
+                        _id: userResult._id,
+                        name: userResult.name,
+                        uid: userResult.uid,
+                        email: userResult.email,
+                        createdAt: userResult.createdAt,
+                        updatedAt: userResult.updatedAt
+                    }
                     return { message: 'User Logged In', user }
                 }
             } else {
@@ -67,8 +77,8 @@ export class UserController {
                 if (uid == null) {
                     throw new BadRequestException('uid not found')
                 }
-                const user = await this.service.findByUid(uid);
-                if (user == null) {
+                const userResult = await this.service.findByUid(uid);
+                if (userResult == null) {
                     return this.firebaseAuth.getAuth()
                         .getUser(uid)
                         .then(async (userRecord) => {
@@ -96,6 +106,16 @@ export class UserController {
                             throw new BadRequestException(error)
                         })
                 } else {
+                    const restaurant = await this.restaurantService.findOneByOwnerId(userResult._id.toString())
+                    const user = {
+                        _id: userResult._id,
+                        name: userResult.name,
+                        uid: userResult.uid,
+                        email: userResult.email,
+                        createdAt: userResult.createdAt,
+                        updatedAt: userResult.updatedAt,
+                        restaurant: restaurant
+                    }
                     return { message: 'User Logged In', user }
                 }
             }

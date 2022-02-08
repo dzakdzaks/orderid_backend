@@ -2,6 +2,9 @@ import { IsNotEmpty, IsNumber, IsString } from "class-validator"
 
 export class BaseRestaurantDto {
     @IsString()
+    owner: string
+
+    @IsString()
     name: string
 
     @IsString()

@@ -24,6 +24,10 @@ export class RestaurantService {
         return await this.model.findOne({ 'code': code }).exec()
     }
 
+    async findOneByOwnerId(ownerId: String): Promise<Restaurant> {
+        return await this.model.findOne({ 'owner': ownerId }).exec()
+    }
+
     async create(createRestaurantDto: CreateRestaurantDto): Promise<Restaurant> {
         return await new this.model({
             ...createRestaurantDto

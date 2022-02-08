@@ -14,19 +14,16 @@ export class UserService {
 
     async findByName(name: String): Promise<User> {
         return await this.model.findOne({ 'name': name })
-        .populate({ path: 'restaurant' })
         .exec()
     }
 
     async findById(id: String): Promise<User> {
         return await this.model.findById(id)
-        .populate({ path: 'restaurant' })
         .exec()
     }
 
     async findByUid(uid: String): Promise<User> {
         return await this.model.findOne({ 'uid': uid })
-        .populate({ path: 'restaurant' })
         .exec()
     }
 
@@ -34,10 +31,6 @@ export class UserService {
         return await new this.model({
             ...createUserDto
         }).save();
-    }
-
-    async updateRestaurantId(uid: String, restaurantId: string): Promise<User> {
-        return await this.model.findOneAndUpdate({ 'uid': uid }, { 'restaurant': restaurantId }).exec();
     }
 
     async update(id: String, updateUserDto: UpdateUserDto): Promise<User> {

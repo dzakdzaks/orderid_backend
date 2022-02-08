@@ -13,7 +13,4 @@ export class BaseUserDto {
 
     @IsString()
     password?: string
-
-    @IsString()
-    restaurant?: string
 }

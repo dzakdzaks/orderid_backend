@@ -14,8 +14,7 @@ export class RestaurantController {
     constructor(
         private readonly service: RestaurantService,
         private readonly menuCategoryService: MenuCategoryService,
-        private readonly menuService: MenuService,
-        private readonly userService: UserService
+        private readonly menuService: MenuService
     ) { }
 
     @Get('get-restaurant')
@@ -89,16 +88,10 @@ export class RestaurantController {
     }
 
     @Post('create')
-    async create(@Req() request: Request, @Body() createRestaurantDto: CreateRestaurantDto) {
-        try {
-            const uid = request['user'].uid;
-            if (uid == null) {
-                throw new BadRequestException('uid not found')
-            }
-            await this.service.create(createRestaurantDto);
-            const restaurantResult = await this.service.findOneByCode(createRestaurantDto.code)
-            await this.userService.updateRestaurantId(uid, restaurantResult._id.toString())
-            return restaurantResult
+    async create(@Body() createRestaurantDto: CreateRestaurantDto) {
+        try { 
+            const restaurant = this.service.create(createRestaurantDto);
+            return restaurant
         } catch (error) {
             if (error.message.includes('code') && error.message.includes('to be unique')) {
                 throw new BadRequestException('Code already exist, try another code')
