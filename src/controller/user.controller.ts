@@ -107,7 +107,7 @@ export class UserController {
                             throw new BadRequestException(error)
                         })
                 } else {
-                    const restaurant = await this.restaurantService.findOneByOwnerId(userResult._id.toString())
+                    const restaurant = await this.restaurantService.findOneByOwnerId(userResult.uid)
                     const user = {
                         _id: userResult._id,
                         name: userResult.name,
