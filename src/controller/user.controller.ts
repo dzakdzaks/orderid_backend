@@ -6,6 +6,7 @@ import { CreateUserDto } from 'src/data/user/dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
 import { RestaurantService } from 'src/service/restaurant.service';
+import * as mongoose from 'mongoose';
 
 @Controller('api/user')
 export class UserController {
@@ -143,6 +144,19 @@ export class UserController {
                 updatedAt: employee.updatedAt
             }
             return { message: 'Employeee Added', user }
+        } catch (error) {
+            throw new BadRequestException(error)
+        }
+    }
+
+    @Post('delete/:id')
+    async delete(@Param('id') id: String) {
+        try {
+            if (!mongoose.isValidObjectId(id)) {
+                throw new BadRequestException()
+            }
+            const restaurant = await this.service.delete(id);
+            return restaurant
         } catch (error) {
             throw new BadRequestException(error)
         }
